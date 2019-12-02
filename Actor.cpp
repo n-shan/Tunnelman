@@ -14,9 +14,7 @@ Actor::~Actor() {
 
 void Actor::doSomething() { return; }
 
-StudentWorld* Actor::getWorld() {
-    
-}
+//StudentWorld* Actor::getWorld() { }
 
 //earth functions
 Earth::Earth(int x, int y) : Actor(TID_EARTH, x, y, right, .25, 3) {
@@ -46,9 +44,19 @@ void Tunnelman::doSomething() {
         switch (ch) {
             case KEY_PRESS_LEFT:
                 //move player to the left
+                moveTo(getX() - 1, getY());
                 break;
             case KEY_PRESS_RIGHT:
                 //move player to the right
+                moveTo(getX() + 1, getY());
+                break;
+            case KEY_PRESS_UP:
+                //move player up
+                moveTo(getX(), getY() + 1);
+                break;
+            case KEY_PRESS_DOWN:
+                //move player down
+                moveTo(getX(), getY() - 1);
                 break;
             case KEY_PRESS_SPACE:
                 //add a Squirt in front of the player

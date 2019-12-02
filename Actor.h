@@ -9,7 +9,7 @@ public:
     Actor(int imageID, int startX, int startY, Direction dir, double size, int depth);
     ~Actor();
     virtual void doSomething();
-    StudentWorld* getWorld();
+    //StudentWorld* getWorld();
 private:
     
 };
