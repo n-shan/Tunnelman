@@ -22,7 +22,9 @@ public:
         //display earth grid
         for(int i = 0; i < 60; i++) {
             for(int j = 0; j < 60; j++) {
-                earthGrid[i][j].reset(new Earth(i, j));
+                //create initial tunnel
+                if(i < 30 || i > 33 || j < 4)
+                    earthGrid[i][j].reset(new Earth(i, j));
             }
         }
         //display tunnelman
