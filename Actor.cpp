@@ -33,5 +33,25 @@ Tunnelman::~Tunnelman() {
 }
 
 void Tunnelman::doSomething() {
+    //if(lives == 0)
+        //return
+    int ch;
     
+    //if (getWorld()->getKey(ch) == true) {
+        // user hit a key this tick!
+        switch (ch) {
+            case KEY_PRESS_LEFT:
+                //move player to the left
+                break;
+            case KEY_PRESS_RIGHT:
+                //move player to the right
+                break;
+            case KEY_PRESS_SPACE:
+                //add a Squirt in front of the player
+                break;
+                // etc...
+                
+        }
+    //}
 }
+
