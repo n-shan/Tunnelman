@@ -19,11 +19,14 @@ public:
 
 	virtual int init()
 	{
+        //display earth grid
         for(int i = 0; i < 60; i++) {
             for(int j = 0; j < 60; j++) {
                 earthGrid[i][j].reset(new Earth(i, j));
             }
         }
+        //display tunnelman
+        tMan.reset(new Tunnelman);
 		return GWSTATUS_CONTINUE_GAME;
 	}
 
@@ -42,6 +45,7 @@ public:
 
 private:
     std::unique_ptr<Earth> earthGrid[60][60];
+    std::unique_ptr<Tunnelman> tMan;
 };
 
 #endif // STUDENTWORLD_H_
