@@ -6,15 +6,21 @@
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 class Actor : public GraphObject{
 public:
-    
+    Actor(int imageID, int startX, int startY, Direction dir, double size, int depth);
+    ~Actor();
+    virtual void doSomething();
 private:
     
 };
-#endif // ACTOR_H_
 
 class Earth : public Actor {
 public:
-    
+    Earth(int x, int y);
+    ~Earth();
 private:
     
 };
+
+
+#endif // ACTOR_H_
+
