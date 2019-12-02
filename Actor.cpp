@@ -22,3 +22,16 @@ Earth::Earth(int x, int y) : Actor(TID_EARTH, x, y, right, .25, 3) {
 Earth::~Earth() {
     
 }
+
+//tunnelman functions
+Tunnelman::Tunnelman() : Actor(TID_PLAYER, 30, 60, right, 1.0, 0){
+    setVisible(true);
+}
+
+Tunnelman::~Tunnelman() {
+    
+}
+
+void Tunnelman::doSomething() {
+    
+}

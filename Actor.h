@@ -21,6 +21,14 @@ private:
     
 };
 
+class Tunnelman : public Actor {
+public:
+    Tunnelman();
+    ~Tunnelman();
+    virtual void doSomething();
+private:
+    
+};
 
 #endif // ACTOR_H_
 
