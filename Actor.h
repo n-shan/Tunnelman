@@ -15,7 +15,7 @@ public:
         sWorld = studentWorld;
     }
     ~Actor() { }
-    virtual void doSomething();
+    virtual void doSomething() = 0;
 protected:
     StudentWorld* sWorld;
 private:
@@ -28,6 +28,7 @@ public:
         setVisible(true);
     }
     ~Earth() { }
+    virtual void doSomething() { }
 private:
     
 };

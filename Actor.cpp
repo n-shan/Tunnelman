@@ -3,7 +3,6 @@
 // Students:  Add code to this file (if you wish), Actor.h, StudentWorld.h, and StudentWorld.cpp
 
 //actor funtions
-void Actor::doSomething() { return; }
 
 //earth functions
 
