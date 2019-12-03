@@ -3,29 +3,41 @@
 
 #include "GraphObject.h"
 
+class StudentWorld;
+
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
-class Actor : public GraphObject{
+class Actor : public GraphObject {
 public:
-    Actor(int imageID, int startX, int startY, Direction dir, double size, int depth);
-    ~Actor();
+    Actor(int imageID, int startX, int startY, Direction dir, double size, int depth, StudentWorld* studentWorld)
+    : GraphObject(imageID, startX, startY, dir, size, depth) {
+        setVisible(false);
+        //allows actor to access student world
+        sWorld = studentWorld;
+    }
+    ~Actor() { }
     virtual void doSomething();
-    //StudentWorld* getWorld();
+protected:
+    StudentWorld* sWorld;
 private:
     
 };
 
 class Earth : public Actor {
 public:
-    Earth(int x, int y);
-    ~Earth();
+    Earth(int x, int y) : Actor(TID_EARTH, x, y, right, .25, 3, nullptr) {
+        setVisible(true);
+    }
+    ~Earth() { }
 private:
     
 };
 
 class Tunnelman : public Actor {
 public:
-    Tunnelman();
-    ~Tunnelman();
+    Tunnelman(StudentWorld* studentWorld) : Actor(TID_PLAYER, 30, 60, right, 1.0, 0, studentWorld) {
+        setVisible(true);
+    }
+    ~Tunnelman() { }
     virtual void doSomething();
 private:
     
