@@ -16,6 +16,7 @@ public:
     }
     ~Actor() { }
     virtual void doSomething() = 0;
+    StudentWorld* getWorld() { return sWorld; }
 protected:
     StudentWorld* sWorld;
 private:

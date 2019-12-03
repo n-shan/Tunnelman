@@ -1,4 +1,5 @@
 #include "Actor.h"
+#include "StudentWorld.h"
 
 // Students:  Add code to this file (if you wish), Actor.h, StudentWorld.h, and StudentWorld.cpp
 
@@ -12,7 +13,7 @@ void Tunnelman::doSomething() {
         //return
     int ch;
     
-    //if (getWorld()->getKey(ch) == true) {
+    if (getWorld()->getKey(ch) == true) {
         // user hit a key this tick!
         switch (ch) {
             case KEY_PRESS_LEFT:
@@ -37,6 +38,6 @@ void Tunnelman::doSomething() {
                 // etc...
                 
         }
-    //}
+    }
 }
 
