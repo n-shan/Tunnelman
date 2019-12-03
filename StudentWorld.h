@@ -23,6 +23,8 @@ public:
 	{
 		decLives();
 		checkOverlap(Tman->getDirection());
+
+		//should be last line before return
 		Tman->doSomething();
 //		return GWSTATUS_PLAYER_DIED;
 		return GWSTATUS_CONTINUE_GAME;

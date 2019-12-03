@@ -9,14 +9,12 @@ public:
 	~Actor();
 	virtual void doSomething();
 	std::shared_ptr<StudentWorld*>  getWorld();
-//	std::shared_ptr<StudentWorld*> sw = std::make_shared<StudentWorld*>();
-	std::shared_ptr<StudentWorld*> sw;
 
 	//hitbox function
 		//hitbox function same as check bounds?
 	//check bounds function (int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y)
 private:
-
+	std::shared_ptr<StudentWorld*> sw;
 };
 class Earth : public Actor
 {

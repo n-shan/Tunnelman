@@ -9,6 +9,8 @@ Actor::Actor(int image, int startX, int startY, Direction d, double size, int de
 }
 Actor::~Actor() {}
 void Actor::doSomething() {}
+std::shared_ptr<StudentWorld*>  Actor::getWorld()
+{ return sw; }
 //Earth----------------------------------------------------------------------------------------
 Earth::Earth(int startX, int startY)
 	: Actor(TID_EARTH, startX, startY, right, .25, 3)
@@ -18,17 +20,9 @@ Earth::~Earth()
 //TunnelMan------------------------------------------------------------------------------------
 TunnelMan::TunnelMan(std::shared_ptr<StudentWorld*> SW)
 	: Actor(TID_PLAYER, 28, 60, right, 1, 0, SW)
-{ 
-	setVisible(true); 
-	
-}
+{ setVisible(true); }
 TunnelMan::~TunnelMan()
-{
-	setVisible(false); 
-	
-}
-std::shared_ptr<StudentWorld*>  Actor::getWorld()
-{ return sw; }
+{ setVisible(false); }
 bool TunnelMan::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, Direction d)
 {
 	int shiftX, shiftY;
@@ -63,11 +57,6 @@ bool TunnelMan::checkBounds(int boundX, int boundY, int boundShiftX, int boundSh
 }
 void TunnelMan::doSomething()
 {	
-/*	if(checkBounds())
-	{
-	
-	}
-*/
 	int ch = -1;
 	if ((*getWorld())->getKey(ch) == true)
 	{
