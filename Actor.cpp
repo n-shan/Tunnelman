@@ -12,9 +12,9 @@ void Tunnelman::doSomething() {
     //if(lives == 0)
         //return
     int ch;
-    
     if (getWorld()->getKey(ch) == true) {
         // user hit a key this tick!
+        //update location and remove earth
         switch (ch) {
             case KEY_PRESS_LEFT:
                 //move player to the left

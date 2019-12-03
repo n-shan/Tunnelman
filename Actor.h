@@ -12,13 +12,13 @@ public:
     : GraphObject(imageID, startX, startY, dir, size, depth) {
         setVisible(false);
         //allows actor to access student world
-        sWorld = studentWorld;
+        s_World = studentWorld;
     }
-    ~Actor() { }
+    ~Actor() { } //TODO
     virtual void doSomething() = 0;
-    StudentWorld* getWorld() { return sWorld; }
+    StudentWorld* getWorld() { return s_World; }
 protected:
-    StudentWorld* sWorld;
+    StudentWorld* s_World;
 private:
     
 };
@@ -28,7 +28,7 @@ public:
     Earth(int x, int y) : Actor(TID_EARTH, x, y, right, .25, 3, nullptr) {
         setVisible(true);
     }
-    ~Earth() { }
+    ~Earth() { } //TODO
     virtual void doSomething() { }
 private:
     
@@ -39,7 +39,7 @@ public:
     Tunnelman(StudentWorld* studentWorld) : Actor(TID_PLAYER, 30, 60, right, 1.0, 0, studentWorld) {
         setVisible(true);
     }
-    ~Tunnelman() { }
+    ~Tunnelman() { } //TODO
     virtual void doSomething();
 private:
     
