@@ -1,7 +1,8 @@
 #include "Actor.h"
 #include "StudentWorld.h"
 //Actor----------------------------------------------------------------------------------------
-Actor::Actor(int image, int startX, int startY, Direction d, double size, int depth, std::shared_ptr<StudentWorld*> SW = std::make_shared<StudentWorld*>(nullptr))
+Actor::Actor(int image, int startX, int startY, Direction d, double size, int depth, 
+	std::shared_ptr<StudentWorld*> SW = std::make_shared<StudentWorld*>(nullptr))
 	: GraphObject(image, startX, startY, d, size, depth)
 { 
 	setVisible(false);
@@ -9,7 +10,7 @@ Actor::Actor(int image, int startX, int startY, Direction d, double size, int de
 }
 Actor::~Actor() {}
 void Actor::doSomething() {}
-std::shared_ptr<StudentWorld*>  Actor::getWorld()
+std::shared_ptr<StudentWorld*> Actor::getWorld()
 { return sw; }
 //Earth----------------------------------------------------------------------------------------
 Earth::Earth(int startX, int startY)
@@ -23,12 +24,15 @@ TunnelMan::TunnelMan(std::shared_ptr<StudentWorld*> SW)
 { setVisible(true); }
 TunnelMan::~TunnelMan()
 { setVisible(false); }
-bool TunnelMan::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, Direction d)
+bool TunnelMan::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, 
+	int X, int Y, Direction d)
 {
 	int shiftX, shiftY;
 	switch (d)
 	{
 	case none:
+		shiftX = 0;
+		shiftY = 0;
 		return true;
 	case up:
 		shiftX = 0;

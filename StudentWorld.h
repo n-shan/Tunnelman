@@ -22,8 +22,8 @@ public:
 	virtual int move()
 	{
 		decLives();
+//		std::cout << Tman->getX() << " " << Tman->getY() << std::endl;
 		checkOverlap(Tman->getDirection());
-
 		//should be last line before return
 		Tman->doSomething();
 //		return GWSTATUS_PLAYER_DIED;

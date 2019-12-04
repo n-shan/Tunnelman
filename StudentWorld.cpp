@@ -17,7 +17,7 @@ bool StudentWorld::makeEarthGrid()
 	}
 	for (int i = 28; i < 32; i++)
 	{
-		for (int j = 0; j < 60; j++)
+		for (int j = 4; j < 60; j++)
 		{
 			earthGrid[i][j]->setVisible(false);
 		}
@@ -27,16 +27,25 @@ bool StudentWorld::makeEarthGrid()
 }
 void StudentWorld::checkOverlap(GraphObject::Direction d)
 {
-	if (Tman->checkBounds(0, 0, 60, 60, Tman->getX(), Tman->getY(), Tman->getDirection()))
+	//checks the top four pixels of the earthGrid
+	//and adjusts how much earth to remove
+	int nearSurfaceShift = 4; //DO NOT FUCK WITH THE NEARSURFACESHIFT
+	//asks if the Tman is in the earthGrid
+	if (Tman->checkBounds(0, 0, 56, 60, Tman->getX(), Tman->getY(), GraphObject::Direction::none))
 	{
+		if (!Tman->checkBounds(0, 0, 56, 56, Tman->getX(), Tman->getY(), GraphObject::Direction::up))
+		{
+			nearSurfaceShift -= Tman->getY() - 56;
+		}
 		for (int i = 0; i < 4; i++)
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < nearSurfaceShift; j++)
 			{
 				if (earthGrid[Tman->getX() + i][Tman->getY() + j]->isVisible())
 					earthGrid[Tman->getX() + i][Tman->getY() + j]->setVisible(false);
 			}
 		}
+
 	}
 	return;
 }
