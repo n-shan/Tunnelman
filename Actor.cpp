@@ -18,19 +18,35 @@ void Tunnelman::doSomething() {
         switch (ch) {
             case KEY_PRESS_LEFT:
                 //move player to the left
-                moveTo(getX() - 1, getY());
+                if(getDirection() == left) {
+                    moveTo(getX() - 1, getY());
+                }
+                else
+                    setDirection(left);
                 break;
             case KEY_PRESS_RIGHT:
                 //move player to the right
-                moveTo(getX() + 1, getY());
+                if(getDirection() == right) {
+                    moveTo(getX() + 1, getY());
+                }
+                else
+                    setDirection(right);
                 break;
             case KEY_PRESS_UP:
                 //move player up
-                moveTo(getX(), getY() + 1);
+                if(getDirection() == up) {
+                    moveTo(getX(), getY() + 1);
+                }
+                else
+                    setDirection(up);
                 break;
             case KEY_PRESS_DOWN:
                 //move player down
-                moveTo(getX(), getY() - 1);
+                if(getDirection() == down) {
+                    moveTo(getX(), getY() - 1);
+                }
+                else
+                    setDirection(down);
                 break;
             case KEY_PRESS_SPACE:
                 //add a Squirt in front of the player
