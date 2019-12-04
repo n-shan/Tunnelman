@@ -18,7 +18,7 @@ public:
     virtual int move();
     virtual void cleanUp();
     void dig();
-    void clearEarth(int constLevel, int botOther, int topOther, bool isX);
+    void clearEarth(int constLevel, int botOther, bool isX);
 private:
     std::unique_ptr<Earth> earthGrid[60][60];
     std::unique_ptr<Tunnelman> tunnelMan;
