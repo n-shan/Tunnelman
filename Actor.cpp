@@ -19,7 +19,10 @@ void Tunnelman::doSomething() {
             case KEY_PRESS_LEFT:
                 //move player to the left
                 if(getDirection() == left) {
-                    moveTo(getX() - 1, getY());
+                    if(getX() > 0)
+                        moveTo(getX() - 1, getY());
+                    else
+                        moveTo(getX(), getY());
                 }
                 else
                     setDirection(left);
@@ -27,7 +30,10 @@ void Tunnelman::doSomething() {
             case KEY_PRESS_RIGHT:
                 //move player to the right
                 if(getDirection() == right) {
-                    moveTo(getX() + 1, getY());
+                    if(getX() < 56)
+                        moveTo(getX() + 1, getY());
+                    else
+                        moveTo(getX(), getY());
                 }
                 else
                     setDirection(right);
@@ -35,7 +41,10 @@ void Tunnelman::doSomething() {
             case KEY_PRESS_UP:
                 //move player up
                 if(getDirection() == up) {
-                    moveTo(getX(), getY() + 1);
+                    if(getY() < 60)
+                        moveTo(getX(), getY() + 1);
+                    else
+                        moveTo(getX(), getY());
                 }
                 else
                     setDirection(up);
@@ -43,7 +52,10 @@ void Tunnelman::doSomething() {
             case KEY_PRESS_DOWN:
                 //move player down
                 if(getDirection() == down) {
-                    moveTo(getX(), getY() - 1);
+                    if(getY() > 0)
+                        moveTo(getX(), getY() - 1);
+                    else
+                        moveTo(getX(), getY());
                 }
                 else
                     setDirection(down);
