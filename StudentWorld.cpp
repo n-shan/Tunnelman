@@ -13,8 +13,9 @@ int StudentWorld::init() {
     for(int i = 0; i < 60; i++) {
         for(int j = 0; j < 60; j++) {
             //create initial tunnel
+            earthGrid[i][j].reset(new Earth(i, j, false));
             if(i < 30 || i > 33 || j < 4)
-                earthGrid[i][j].reset(new Earth(i, j));
+                earthGrid[i][j].reset(new Earth(i, j, true));
         }
     }
     //display tunnelman
@@ -38,21 +39,33 @@ void StudentWorld::cleanUp() {
 
 void StudentWorld::dig() {
     if(tunnelMan->getDirection() == GraphObject::Direction::right) {
-        clearEarth(tunnelMan->getX() + 4, tunnelMan->getY(), tunnelMan->getY() + 4);
+        clearEarth(tunnelMan->getX() + 3, tunnelMan->getY(), tunnelMan->getY() + 4, true);
     }
-    if(tunnelMan->getDirection() == GraphObject::Direction::left) {
-        
+    else if(tunnelMan->getDirection() == GraphObject::Direction::left) {
+        clearEarth(tunnelMan->getX(), tunnelMan->getY(), tunnelMan->getY() + 4, true);
     }
-    if(tunnelMan->getDirection() == GraphObject::Direction::up) {
-        
+    else if(tunnelMan->getDirection() == GraphObject::Direction::up) {
+        clearEarth(tunnelMan->getY() + 3, tunnelMan->getX(), tunnelMan->getX() + 4, false);
     }
-    if(tunnelMan->getDirection() == GraphObject::Direction::down) {
-        
+    else if(tunnelMan->getDirection() == GraphObject::Direction::down) {
+        clearEarth(tunnelMan->getY(), tunnelMan->getX(), tunnelMan->getX() + 4, false);
     }
 }
 
-void StudentWorld::clearEarth(int x, int botY, int topY) {
-    for(int i = botY; i < topY; i++) {
-        earthGrid[x][i]->setVisible(false);
+void StudentWorld::clearEarth(int constLevel, int botOther, int topOther, bool isX) {
+    if(botOther > 56) {
+        
+    }
+    else {
+        for(int i = botOther; i < topOther; i++) {
+            if(isX) {
+                if(earthGrid[constLevel][i]->isVisible())
+                    earthGrid[constLevel][i]->setVisible(false);
+            }
+            else {
+                if(earthGrid[i][constLevel]->isVisible())
+                    earthGrid[i][constLevel]->setVisible(false);
+            }
+        }
     }
 }
