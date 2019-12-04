@@ -29,6 +29,7 @@ int StudentWorld::move() {
     //return GWSTATUS_PLAYER_DIED;
     
     tunnelMan->doSomething();
+    //cout << "x: " << tunnelMan->getX() << " y: " << tunnelMan->getY() << endl;
     dig();
     return GWSTATUS_CONTINUE_GAME;
 }
@@ -38,31 +39,37 @@ void StudentWorld::cleanUp() {
 }
 
 void StudentWorld::dig() {
+    //dig depending on the direction
     if(tunnelMan->getDirection() == GraphObject::Direction::right) {
-        clearEarth(tunnelMan->getX() + 3, tunnelMan->getY(), true);
+        clearEarth(tunnelMan->getX() + 3, tunnelMan->getY(), tunnelMan->getY(), true);
     }
     else if(tunnelMan->getDirection() == GraphObject::Direction::left) {
-        clearEarth(tunnelMan->getX(), tunnelMan->getY(), true);
+        clearEarth(tunnelMan->getX(), tunnelMan->getY(), tunnelMan->getY(), true);
     }
     else if(tunnelMan->getDirection() == GraphObject::Direction::up) {
-        clearEarth(tunnelMan->getY() + 3, tunnelMan->getX(), false);
+        clearEarth(tunnelMan->getY() + 3, tunnelMan->getX(), tunnelMan->getY(), false);
     }
     else if(tunnelMan->getDirection() == GraphObject::Direction::down) {
-        clearEarth(tunnelMan->getY(), tunnelMan->getX(), false);
+        clearEarth(tunnelMan->getY(), tunnelMan->getX(), tunnelMan->getY(), false);
     }
 }
 
-void StudentWorld::clearEarth(int constLevel, int botOfLevel, bool isX) {
-    if(botOfLevel >= 60)
+void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool isHoriz) {
+    //if tunnelman is at the top of the field
+    if(yLevel >= 60)
+        return;
+    //prevent tunnelman from digging up above y = 56
+    if(yLevel > 56 && tunnelMan->getDirection() == GraphObject::Direction::up)
         return;
     int clearAmount = 4;
-    //if tunnelman is at the top of the field
-    if(botOfLevel > 56) {
+    //if tunnelman is near the top of the field and is horizontal
+    if(yLevel > 56 && isHoriz) {
         //change amount that is cleared
         clearAmount = 60 - tunnelMan->getY();
     }
+    //clear the earth
     for(int i = botOfLevel; i < botOfLevel + clearAmount ; i++) {
-        if(isX) {
+        if(isHoriz) {
             if(earthGrid[constLevel][i]->isVisible())
                 earthGrid[constLevel][i]->setVisible(false);
         }
