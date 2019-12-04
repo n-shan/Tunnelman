@@ -28,6 +28,7 @@ int StudentWorld::move() {
     //return GWSTATUS_PLAYER_DIED;
     
     tunnelMan->doSomething();
+    dig();
     return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -35,4 +36,23 @@ void StudentWorld::cleanUp() {
     //TODO
 }
 
+void StudentWorld::dig() {
+    if(tunnelMan->getDirection() == GraphObject::Direction::right) {
+        clearEarth(tunnelMan->getX() + 4, tunnelMan->getY(), tunnelMan->getY() + 4);
+    }
+    if(tunnelMan->getDirection() == GraphObject::Direction::left) {
+        
+    }
+    if(tunnelMan->getDirection() == GraphObject::Direction::up) {
+        
+    }
+    if(tunnelMan->getDirection() == GraphObject::Direction::down) {
+        
+    }
+}
 
+void StudentWorld::clearEarth(int x, int botY, int topY) {
+    for(int i = botY; i < topY; i++) {
+        earthGrid[x][i]->setVisible(false);
+    }
+}
