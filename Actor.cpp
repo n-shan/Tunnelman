@@ -14,7 +14,7 @@ void Tunnelman::doSomething() {
     int ch;
     if (getWorld()->getKey(ch) == true) {
         // user hit a key this tick!
-        //update location and remove earth
+        //update location and remove earth while checking bounds
         switch (ch) {
             case KEY_PRESS_LEFT:
                 //move player to the left

@@ -13,7 +13,7 @@
 class StudentWorld : public GameWorld {
 public:
 	StudentWorld(std::string assetDir) : GameWorld(assetDir) { }
-    ~StudentWorld() { } //TODO
+    ~StudentWorld() { } //all memory has garbage collection
     virtual int init();
     virtual int move();
     virtual void cleanUp();

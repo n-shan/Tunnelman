@@ -29,14 +29,11 @@ int StudentWorld::move() {
     //return GWSTATUS_PLAYER_DIED;
     
     tunnelMan->doSomething();
-    //cout << "x: " << tunnelMan->getX() << " y: " << tunnelMan->getY() << endl;
     dig();
     return GWSTATUS_CONTINUE_GAME;
 }
 
-void StudentWorld::cleanUp() {
-    //TODO
-}
+void StudentWorld::cleanUp() { } //all memory has garbage collection
 
 void StudentWorld::dig() {
     //dig depending on the direction
