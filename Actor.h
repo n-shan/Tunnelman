@@ -25,8 +25,8 @@ private:
 
 class Earth : public Actor {
 public:
-    Earth(int x, int y) : Actor(TID_EARTH, x, y, right, .25, 3, nullptr) {
-        setVisible(true);
+    Earth(int x, int y, bool isVisible) : Actor(TID_EARTH, x, y, right, .25, 3, nullptr) {
+        setVisible(isVisible);
     }
     ~Earth() { } //TODO
     virtual void doSomething() { }
