@@ -76,3 +76,37 @@ void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool i
         }
     }
 }
+
+//bool TunnelMan::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, Direction d) {
+//    int shiftX, shiftY;
+//    switch (d)
+//    {
+//    case none:
+//        shiftX = 0;
+//        shiftY = 0;
+//        return true;
+//    case up:
+//        shiftX = 0;
+//        shiftY = 1;
+//        break;
+//    case down:
+//        shiftX = 0;
+//        shiftY = -1;
+//        break;
+//    case left:
+//        shiftX = -1;
+//        shiftY = 0;
+//        break;
+//    case right:
+//        shiftX = 1;
+//        shiftY = 0;
+//        break;
+//    default:
+//        return true;
+//    }
+//    if (((X + shiftX) >= boundX && (X + shiftX) <= (boundShiftX - boundX))
+//        && ((Y + shiftY) >= boundY && (Y + shiftY) <= (boundShiftY - boundY)))
+//        return true;
+//    else
+//        return false;
+//}
