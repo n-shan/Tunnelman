@@ -3,36 +3,27 @@
 
 #include "GameWorld.h"
 #include "GameConstants.h"
+#include "Actor.h"
 #include <string>
+#include <memory>
+#include <vector>
 
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
 
-class StudentWorld : public GameWorld
-{
+class StudentWorld : public GameWorld {
 public:
-	StudentWorld(std::string assetDir)
-		: GameWorld(assetDir)
-	{
-	}
-
-	virtual int init()
-	{
-		return GWSTATUS_CONTINUE_GAME;
-	}
-
-	virtual int move()
-	{
-		// This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
-		// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
-		decLives();
-		return GWSTATUS_PLAYER_DIED;
-	}
-
-	virtual void cleanUp()
-	{
-	}
-
+	StudentWorld(std::string assetDir) : GameWorld(assetDir) { }
+    ~StudentWorld() { } //all memory has garbage collection
+    virtual int init();
+    virtual int move();
+    virtual void cleanUp();
+    void dig();
+    void clearEarth(int constLevel, int botOther, int yLevel, bool isX);
 private:
+    std::unique_ptr<Earth> earthGrid[60][60];
+    std::unique_ptr<Tunnelman> tunnelMan;
+    //all actors
+    std::vector<std::unique_ptr<Actor>> actors;
 };
 
 #endif // STUDENTWORLD_H_
