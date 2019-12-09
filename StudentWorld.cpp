@@ -27,7 +27,10 @@ int StudentWorld::move() {
     // This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
     // Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
     //return GWSTATUS_PLAYER_DIED;
-    
+    for(auto it = actors.begin(); it != actors.end(); it++) {
+        if(*it != nullptr)
+            (*it)->doSomething();
+    }
     tunnelMan->doSomething();
     dig();
     return GWSTATUS_CONTINUE_GAME;
@@ -75,6 +78,11 @@ void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool i
                 earthGrid[i][constLevel]->setVisible(false);
         }
     }
+}
+
+void StudentWorld::createSquirt(int x, int y, GraphObject::Direction dir) {
+    std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(x, y, dir);
+    actors.push_back(std::move(squirt));
 }
 
 //bool TunnelMan::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, Direction d) {

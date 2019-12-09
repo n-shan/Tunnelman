@@ -62,15 +62,46 @@ void Tunnelman::doSomething() {
                 break;
             case KEY_PRESS_SPACE:
                 //add a Squirt in front of the player
+                if(getDirection() == right) {
+                    getWorld()->createSquirt(getX() + 4, getY(), getDirection());
+                }
+                if(getDirection() == left) {
+                    getWorld()->createSquirt(getX() - 4, getY(), getDirection());
+                }
+                if(getDirection() == up) {
+                    getWorld()->createSquirt(getX(), getY() + 4, getDirection());
+                }
+                if(getDirection() == down) {
+                    getWorld()->createSquirt(getX(), getY() - 4, getDirection());
+                }
                 break;
                 // etc...
-                
         }
     }
 }
 
 //Squirt functions
 void Squirt::doSomething() {
-    
+    //if the squirt can travel
+    if(disTraveled <= 4) {
+        if(getDirection() == right) {
+            moveTo(getX() + 1, getY());
+        }
+        if(getDirection() == left) {
+            moveTo(getX() - 1, getY());
+        }
+        if(getDirection() == up) {
+            moveTo(getX(), getY() + 1);
+        }
+        if(getDirection() == down) {
+            moveTo(getX(), getY() - 1);
+        }
+        disTraveled++;
+    }
+    //if the squirt cannot travel
+    else {
+        setVisible(false);
+        //set state to dead
+    }
 }
 

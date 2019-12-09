@@ -17,8 +17,14 @@ public:
     virtual int init();
     virtual int move();
     virtual void cleanUp();
+    //calls clearEarth depending on tunnelman's location
     void dig();
+    //clears the earth at a certain location
     void clearEarth(int constLevel, int botOther, int yLevel, bool isX);
+    //creats a squirt at a certain location
+    void createSquirt(int x, int y, GraphObject::Direction dir);
+    //removes dead actors from oil field
+    void removeDeadActors(std::vector<std::unique_ptr<Actor>> actors);
 private:
     std::unique_ptr<Earth> earthGrid[60][60];
     std::unique_ptr<Tunnelman> tunnelMan;
