@@ -69,3 +69,8 @@ void Tunnelman::doSomething() {
     }
 }
 
+//Squirt functions
+void Squirt::doSomething() {
+    
+}
+
