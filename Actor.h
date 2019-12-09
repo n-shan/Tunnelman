@@ -45,6 +45,13 @@ private:
     
 };
 
+class Squirt : public Actor {
+public:
+    
+private:
+    
+};
+
 //PART 1
 //Actor class
     ///constructor
