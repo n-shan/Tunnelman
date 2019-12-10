@@ -81,8 +81,25 @@ void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool i
 }
 
 void StudentWorld::createSquirt(int x, int y, GraphObject::Direction dir) {
-    std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(x, y, dir);
+    std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(x, y, dir, this);
     actors.push_back(std::move(squirt));
+}
+
+bool StudentWorld::locIsOccupied(int x, int y) {
+    std::cout << x << " " << y << std::endl;
+    //if outside the grid
+    if(x > 56 || x < -1 || y > 61 || y < 4)
+        return true;
+    //if above grid b/w x=0,x=60
+    else if((x <= 56 || x > -1) && y >= 60)
+        return false;
+    //if within the grid
+    else
+        return earthGrid[x][y]->isVisible();
+}
+
+void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>> actors) {
+    
 }
 
 //bool TunnelMan::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, Direction d) {

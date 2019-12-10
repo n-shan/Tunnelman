@@ -47,8 +47,8 @@ private:
 
 class Squirt : public Actor {
 public:
-    Squirt(int x, int y, Direction dir) : Actor(TID_WATER_SPURT, x, y, dir, 1.0, 1, nullptr) {
-        setVisible(true);
+    Squirt(int x, int y, Direction dir, StudentWorld* studentWorld) : Actor(TID_WATER_SPURT, x, y, dir, 1.0, 1, studentWorld) {
+        setVisible(false);
         disTraveled = 0;
     }
     virtual ~Squirt() { }
