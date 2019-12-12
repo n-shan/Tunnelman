@@ -40,16 +40,16 @@ void StudentWorld::cleanUp() { } //all memory has garbage collection
 
 void StudentWorld::dig() {
     //dig depending on the direction
-    if(tunnelMan->getDirection() == GraphObject::Direction::right) {
+    if(tunnelMan->getDirection() == Actor::Direction::right) {
         clearEarth(tunnelMan->getX() + 3, tunnelMan->getY(), tunnelMan->getY(), true);
     }
-    else if(tunnelMan->getDirection() == GraphObject::Direction::left) {
+    else if(tunnelMan->getDirection() == Actor::Direction::left) {
         clearEarth(tunnelMan->getX(), tunnelMan->getY(), tunnelMan->getY(), true);
     }
-    else if(tunnelMan->getDirection() == GraphObject::Direction::up) {
+    else if(tunnelMan->getDirection() == Actor::Direction::up) {
         clearEarth(tunnelMan->getY() + 3, tunnelMan->getX(), tunnelMan->getY(), false);
     }
-    else if(tunnelMan->getDirection() == GraphObject::Direction::down) {
+    else if(tunnelMan->getDirection() == Actor::Direction::down) {
         clearEarth(tunnelMan->getY(), tunnelMan->getX(), tunnelMan->getY(), false);
     }
 }
@@ -59,7 +59,7 @@ void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool i
     if(yLevel >= 60)
         return;
     //prevent tunnelman from digging up above y = 56
-    if(yLevel > 56 && tunnelMan->getDirection() == GraphObject::Direction::up)
+    if(yLevel > 56 && tunnelMan->getDirection() == Actor::Direction::up)
         return;
     int clearAmount = 4;
     //if tunnelman is near the top of the field and is horizontal
@@ -80,22 +80,41 @@ void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool i
     }
 }
 
-void StudentWorld::createSquirt(int x, int y, GraphObject::Direction dir) {
-    std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(x, y, dir, this);
-    actors.push_back(std::move(squirt));
+void StudentWorld::createSquirt(int x, int y, Actor::Direction dir) {
+    if(canCreateAt(x, y)) {
+        std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(x, y, dir, this);
+        squirt->setVisible(true);
+        actors.push_back(std::move(squirt));
+    }
 }
 
-bool StudentWorld::locIsOccupied(int x, int y) {
-    std::cout << x << " " << y << std::endl;
+//check if you can create an object at a location
+bool StudentWorld::canCreateAt(int x, int y) {
     //if outside the grid
-    if(x > 56 || x < -1 || y > 61 || y < 4)
-        return true;
+    if(x > 56 || x < 0 || y > 60 || y < 0)
+        return false;
+    for(int i = 0; i < 4; i++) {
+        for(int j = 0; j < 4; j++) {
+            if(x + i >= 60 || y + j >= 60)
+                continue;
+            if(earthGrid[x + i][y + j]->isVisible())
+                return false;
+        }
+    }
+    return true;
+}
+
+bool StudentWorld::canMove(int x, int y) {
+    //std::cout << x << " " << y << std::endl;
+    //if outside the grid
+    if(x > 60 || x < 0 || y > 63 || y < 0 )
+        return false;
     //if above grid b/w x=0,x=60
     else if((x <= 56 || x > -1) && y >= 60)
-        return false;
+        return true;
     //if within the grid
     else
-        return earthGrid[x][y]->isVisible();
+        return !earthGrid[x][y]->isVisible();
 }
 
 void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>> actors) {

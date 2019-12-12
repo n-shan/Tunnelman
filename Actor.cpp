@@ -63,16 +63,16 @@ void Tunnelman::doSomething() {
             case KEY_PRESS_SPACE:
                 //add a Squirt in front of the player
                 if(getDirection() == right) {
-                    getWorld()->createSquirt(getX() + 3, getY(), getDirection());
+                    getWorld()->createSquirt(getX() + 4, getY(), getDirection());
                 }
                 else if(getDirection() == left) {
-                    getWorld()->createSquirt(getX() - 3, getY(), getDirection());
+                    getWorld()->createSquirt(getX() - 4, getY(), getDirection());
                 }
                 else if(getDirection() == up) {
-                    getWorld()->createSquirt(getX(), getY() + 3, getDirection());
+                    getWorld()->createSquirt(getX(), getY() + 4, getDirection());
                 }
                 else if(getDirection() == down) {
-                    getWorld()->createSquirt(getX(), getY() - 3, getDirection());
+                    getWorld()->createSquirt(getX(), getY() - 4, getDirection());
                 }
                 break;
                 // etc...
@@ -85,20 +85,16 @@ void Squirt::doSomething() {
     //TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
     //if the squirt can travel
     if(disTraveled < 4) {
-        if(getDirection() == right && !getWorld()->locIsOccupied(getX() + 1, getY())) {
-            setVisible(true);
+        if(getDirection() == right && getWorld()->canMove(getX() + 4, getY())) {
             moveTo(getX() + 1, getY());
         }
-        else if(getDirection() == left && !getWorld()->locIsOccupied(getX() - 1, getY())) {
-            setVisible(true);
+        else if(getDirection() == left && getWorld()->canMove(getX() - 1, getY())) {
             moveTo(getX() - 1, getY());
         }
-        else if(getDirection() == up && !getWorld()->locIsOccupied(getX(), getY() + 1)) {
-            setVisible(true);
+        else if(getDirection() == up && getWorld()->canMove(getX(), getY() + 4)) {
             moveTo(getX(), getY() + 1);
         }
-        else if(getDirection() == down && !getWorld()->locIsOccupied(getX(), getY() - 1)) {
-            setVisible(true);
+        else if(getDirection() == down && getWorld()->canMove(getX(), getY() - 1)) {
             moveTo(getX(), getY() - 1);
         }
         else {

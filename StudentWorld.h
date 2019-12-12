@@ -23,8 +23,10 @@ public:
     void clearEarth(int constLevel, int botOther, int yLevel, bool isX);
     //creats a squirt at a certain location
     void createSquirt(int x, int y, GraphObject::Direction dir);
+    //check if you can create an object at a location
+    bool canCreateAt(int x, int y);
     //check if location is occupied
-    bool locIsOccupied(int x, int y);
+    bool canMove(int x, int y);
     //removes dead actors from oil field
     void removeDeadActors(std::vector<std::unique_ptr<Actor>> actors);
 private:
