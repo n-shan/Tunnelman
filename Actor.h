@@ -14,7 +14,7 @@ public:
         //allows actor to access student world
         s_World = studentWorld;
     }
-    ~Actor() { } 
+    virtual ~Actor() { }
     virtual void doSomething() = 0;
     StudentWorld* getWorld() { return s_World; }
 protected:
@@ -28,7 +28,7 @@ public:
     Earth(int x, int y, bool isVisible) : Actor(TID_EARTH, x, y, right, .25, 3, nullptr) {
         setVisible(isVisible);
     }
-    ~Earth() { }
+    virtual ~Earth() { }
     virtual void doSomething() { }
 private:
     
@@ -39,10 +39,22 @@ public:
     Tunnelman(StudentWorld* studentWorld) : Actor(TID_PLAYER, 30, 60, right, 1.0, 0, studentWorld) {
         setVisible(true);
     }
-    ~Tunnelman() { }
+    virtual ~Tunnelman() { }
     virtual void doSomething();
 private:
     
+};
+
+class Squirt : public Actor {
+public:
+    Squirt(int x, int y, Direction dir, StudentWorld* studentWorld) : Actor(TID_WATER_SPURT, x, y, dir, 1.0, 1, studentWorld) {
+        setVisible(false);
+        disTraveled = 0;
+    }
+    virtual ~Squirt() { }
+    virtual void doSomething();
+private:
+    int disTraveled;
 };
 
 //PART 1

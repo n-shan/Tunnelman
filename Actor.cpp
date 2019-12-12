@@ -62,10 +62,52 @@ void Tunnelman::doSomething() {
                 break;
             case KEY_PRESS_SPACE:
                 //add a Squirt in front of the player
+                if(getDirection() == right) {
+                    getWorld()->createSquirt(getX() + 4, getY(), getDirection());
+                }
+                else if(getDirection() == left) {
+                    getWorld()->createSquirt(getX() - 4, getY(), getDirection());
+                }
+                else if(getDirection() == up) {
+                    getWorld()->createSquirt(getX(), getY() + 4, getDirection());
+                }
+                else if(getDirection() == down) {
+                    getWorld()->createSquirt(getX(), getY() - 4, getDirection());
+                }
                 break;
                 // etc...
-                
         }
+    }
+}
+
+//Squirt functions
+void Squirt::doSomething() {
+    //TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
+    //if the squirt can travel
+    if(disTraveled < 4) {
+        if(getDirection() == right && getWorld()->canMove(getX() + 4, getY())) {
+            moveTo(getX() + 1, getY());
+        }
+        else if(getDirection() == left && getWorld()->canMove(getX() - 1, getY())) {
+            moveTo(getX() - 1, getY());
+        }
+        else if(getDirection() == up && getWorld()->canMove(getX(), getY() + 4)) {
+            moveTo(getX(), getY() + 1);
+        }
+        else if(getDirection() == down && getWorld()->canMove(getX(), getY() - 1)) {
+            moveTo(getX(), getY() - 1);
+        }
+        else {
+            setVisible(false);
+            //set state to dead
+            return;
+        }
+        disTraveled++;
+    }
+    //if the squirt cannot travel
+    else {
+        setVisible(false);
+        //set state to dead
     }
 }
 

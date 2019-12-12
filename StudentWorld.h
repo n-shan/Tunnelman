@@ -13,12 +13,22 @@
 class StudentWorld : public GameWorld {
 public:
 	StudentWorld(std::string assetDir) : GameWorld(assetDir) { }
-    ~StudentWorld() { } //all memory has garbage collection
+    virtual ~StudentWorld() { } //all memory has garbage collection
     virtual int init();
     virtual int move();
     virtual void cleanUp();
+    //calls clearEarth depending on tunnelman's location
     void dig();
+    //clears the earth at a certain location
     void clearEarth(int constLevel, int botOther, int yLevel, bool isX);
+    //creats a squirt at a certain location
+    void createSquirt(int x, int y, GraphObject::Direction dir);
+    //check if you can create an object at a location
+    bool canCreateAt(int x, int y);
+    //check if location is occupied
+    bool canMove(int x, int y);
+    //removes dead actors from oil field
+    void removeDeadActors(std::vector<std::unique_ptr<Actor>> actors);
 private:
     std::unique_ptr<Earth> earthGrid[60][60];
     std::unique_ptr<Tunnelman> tunnelMan;
