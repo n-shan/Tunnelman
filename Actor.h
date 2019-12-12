@@ -23,6 +23,15 @@ private:
     
 };
 
+class Agent : public Actor {
+public:
+    Agent(int imageID, int startX, int startY, Direction dir, double size, int depth, StudentWorld* studentWorld)
+    : Actor(imageID, startX, startY, dir, size, depth, studentWorld) { }
+    virtual ~Agent() { }
+private:
+    
+};
+
 class Earth : public Actor {
 public:
     Earth(int x, int y, bool isVisible) : Actor(TID_EARTH, x, y, right, .25, 3, nullptr) {
@@ -34,9 +43,29 @@ private:
     
 };
 
-class Tunnelman : public Actor {
+//BOUDLER : public Actor
+
+class Squirt : public Actor {
 public:
-    Tunnelman(StudentWorld* studentWorld) : Actor(TID_PLAYER, 30, 60, right, 1.0, 0, studentWorld) {
+    Squirt(int x, int y, Direction dir, StudentWorld* studentWorld) : Actor(TID_WATER_SPURT, x, y, dir, 1.0, 1, studentWorld) { disTraveled = 0; }
+    virtual ~Squirt() { }
+    virtual void doSomething();
+private:
+    int disTraveled;
+};
+
+//CHECK IF ACTIVATING OBJECTS NEED StudentWorld PTR
+class ActivatingObject : public Actor {
+public:
+    ActivatingObject(int imageID, int startX, int startY, Direction dir, double size, int depth, StudentWorld* studentWorld, bool is_Temp)
+    : Actor(imageID, startX, startY, dir, size, depth, studentWorld) { isTemp = is_Temp; }
+private:
+    bool isTemp;
+};
+
+class Tunnelman : public Agent {
+public:
+    Tunnelman(StudentWorld* studentWorld) : Agent(TID_PLAYER, 30, 60, right, 1.0, 0, studentWorld) {
         setVisible(true);
     }
     virtual ~Tunnelman() { }
@@ -45,16 +74,61 @@ private:
     
 };
 
-class Squirt : public Actor {
+class Protester : public Agent {
 public:
-    Squirt(int x, int y, Direction dir, StudentWorld* studentWorld) : Actor(TID_WATER_SPURT, x, y, dir, 1.0, 1, studentWorld) {
-        setVisible(false);
-        disTraveled = 0;
-    }
-    virtual ~Squirt() { }
+    //Protestor(args) { }
+    virtual ~Protester() { }
+private:
+    
+};
+
+class RegularProtester : public Protester {
+public:
+    //RegularProtester() { }
+    virtual ~RegularProtester() { }
+private:
+    
+};
+
+class HardCoreProtester : public Protester {
+public:
+    //HardCoreProtester() { }
+    virtual ~HardCoreProtester() { }
+private:
+    
+};
+
+class OilBarrel : public ActivatingObject {
+public:
+    OilBarrel(int x, int y) : ActivatingObject(TID_BARREL, x, y, right, 1.0, 2, nullptr, false) { }
+    virtual ~OilBarrel() { }
     virtual void doSomething();
 private:
-    int disTraveled;
+    
+};
+
+class GoldNugget : public ActivatingObject {
+public:
+    GoldNugget(int x, int y, bool isVisible, bool isTemp) : ActivatingObject(TID_GOLD, x, y, right, 1.0, 2, nullptr, isTemp) { setVisible(isVisible); }
+    virtual ~GoldNugget() { }
+private:
+    
+};
+
+class SonarKit : public ActivatingObject {
+public:
+    SonarKit(int x, int y) : ActivatingObject(TID_SONAR, x, y, right, 1.0, 2, nullptr, true) { setVisible(true); }
+    virtual ~SonarKit() { }
+private:
+    
+};
+
+class WaterPool : public ActivatingObject {
+public:
+    WaterPool(int x, int y) : ActivatingObject(TID_WATER_POOL, x, y, right, 1.0, 2, nullptr, true) { }
+    virtual ~WaterPool() { }
+private:
+    
 };
 
 //PART 1
