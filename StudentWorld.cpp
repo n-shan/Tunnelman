@@ -104,7 +104,7 @@ bool StudentWorld::canCreateAt(int x, int y) {
     return true;
 }
 
-bool StudentWorld::canMove(int x, int y) {
+bool StudentWorld::canMoveTo(int x, int y) {
     //if outside the grid
     if(x > 60 || x < 0 || y > 63 || y < 0 )
         return false;

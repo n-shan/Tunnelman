@@ -85,16 +85,16 @@ void Squirt::doSomething() {
     //TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
     //if the squirt can travel
     if(disTraveled < 4) {
-        if(getDirection() == right && getWorld()->canMove(getX() + 4, getY())) {
+        if(getDirection() == right && getWorld()->canMoveTo(getX() + 4, getY())) {
             moveTo(getX() + 1, getY());
         }
-        else if(getDirection() == left && getWorld()->canMove(getX() - 1, getY())) {
+        else if(getDirection() == left && getWorld()->canMoveTo(getX() - 1, getY())) {
             moveTo(getX() - 1, getY());
         }
-        else if(getDirection() == up && getWorld()->canMove(getX(), getY() + 4)) {
+        else if(getDirection() == up && getWorld()->canMoveTo(getX(), getY() + 4)) {
             moveTo(getX(), getY() + 1);
         }
-        else if(getDirection() == down && getWorld()->canMove(getX(), getY() - 1)) {
+        else if(getDirection() == down && getWorld()->canMoveTo(getX(), getY() - 1)) {
             moveTo(getX(), getY() - 1);
         }
         else {

@@ -26,7 +26,7 @@ public:
     //check if you can create an object at a location
     bool canCreateAt(int x, int y);
     //check if location is occupied
-    bool canMove(int x, int y);
+    bool canMoveTo(int x, int y);
     //removes dead actors from oil field
     void removeDeadActors(std::vector<std::unique_ptr<Actor>> actors);
 private:
