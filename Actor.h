@@ -8,7 +8,7 @@ class StudentWorld;
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 class Actor : public GraphObject {
 public:
-    Actor(int imageID, int startX, int startY, Direction dir, double size, int depth, StudentWorld* studentWorld)
+    Actor(int imageID, int startX, int startY, Direction dir, double size, int depth, std::shared_ptr<StudentWorld*> studentWorld)
     : GraphObject(imageID, startX, startY, dir, size, depth) {
         setVisible(false);
         //allows actor to access student world
@@ -16,16 +16,16 @@ public:
     }
     virtual ~Actor() { }
     virtual void doSomething() = 0;
-    StudentWorld* getWorld() { return s_World; }
+    std::shared_ptr<StudentWorld*> getWorld() { return s_World; }
 protected:
-    StudentWorld* s_World;  //TODO : make shared ptr***
+    std::shared_ptr<StudentWorld*> s_World;  //TODO : make shared ptr***
 private:
     
 };
 
 class Agent : public Actor {
 public:
-    Agent(int imageID, int startX, int startY, Direction dir, double size, int depth, StudentWorld* studentWorld)
+    Agent(int imageID, int startX, int startY, Direction dir, double size, int depth, std::shared_ptr<StudentWorld*> studentWorld)
     : Actor(imageID, startX, startY, dir, size, depth, studentWorld) { }
     virtual ~Agent() { }
 private:
@@ -47,7 +47,7 @@ private:
 
 class Squirt : public Actor {
 public:
-    Squirt(int x, int y, Direction dir, StudentWorld* studentWorld) : Actor(TID_WATER_SPURT, x, y, dir, 1.0, 1, studentWorld) { disTraveled = 0; }
+    Squirt(int x, int y, Direction dir, std::shared_ptr<StudentWorld*> studentWorld) : Actor(TID_WATER_SPURT, x, y, dir, 1.0, 1, studentWorld) { disTraveled = 0; }
     virtual ~Squirt() { }
     virtual void doSomething();
 private:
@@ -57,7 +57,7 @@ private:
 //CHECK IF ACTIVATING OBJECTS NEED StudentWorld PTR
 class ActivatingObject : public Actor {
 public:
-    ActivatingObject(int imageID, int startX, int startY, Direction dir, double size, int depth, StudentWorld* studentWorld, bool is_Temp)
+    ActivatingObject(int imageID, int startX, int startY, Direction dir, double size, int depth, std::shared_ptr<StudentWorld*> studentWorld, bool is_Temp)
     : Actor(imageID, startX, startY, dir, size, depth, studentWorld) { isTemp = is_Temp; }
 private:
     bool isTemp;
@@ -65,7 +65,7 @@ private:
 
 class Tunnelman : public Agent {
 public:
-    Tunnelman(StudentWorld* studentWorld) : Agent(TID_PLAYER, 30, 60, right, 1.0, 0, studentWorld) {
+    Tunnelman(std::shared_ptr<StudentWorld*> studentWorld) : Agent(TID_PLAYER, 30, 60, right, 1.0, 0, studentWorld) {
         setVisible(true);
     }
     virtual ~Tunnelman() { }

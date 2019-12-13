@@ -12,7 +12,7 @@ void Tunnelman::doSomething() {
     //if(lives == 0)
         //return
     int ch;
-    if (getWorld()->getKey(ch) == true) {
+    if ((*getWorld())->getKey(ch) == true) {
         // user hit a key this tick!
         //update location and remove earth while checking bounds
         switch (ch) {
@@ -63,16 +63,16 @@ void Tunnelman::doSomething() {
             case KEY_PRESS_SPACE:
                 //add a Squirt in front of the player
                 if(getDirection() == right) {
-                    getWorld()->createSquirt(getX() + 4, getY(), getDirection());
+                    (*getWorld())->createSquirt(getX() + 4, getY(), getDirection());
                 }
                 else if(getDirection() == left) {
-                    getWorld()->createSquirt(getX() - 4, getY(), getDirection());
+                    (*getWorld())->createSquirt(getX() - 4, getY(), getDirection());
                 }
                 else if(getDirection() == up) {
-                    getWorld()->createSquirt(getX(), getY() + 4, getDirection());
+                    (*getWorld())->createSquirt(getX(), getY() + 4, getDirection());
                 }
                 else if(getDirection() == down) {
-                    getWorld()->createSquirt(getX(), getY() - 4, getDirection());
+                    (*getWorld())->createSquirt(getX(), getY() - 4, getDirection());
                 }
                 break;
                 // etc...
@@ -85,16 +85,16 @@ void Squirt::doSomething() {
     //TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
     //if the squirt can travel
     if(disTraveled < 4) {
-        if(getDirection() == right && getWorld()->canMoveTo(getX() + 4, getY())) {
+        if(getDirection() == right && (*getWorld())->canMoveTo(getX() + 4, getY())) {
             moveTo(getX() + 1, getY());
         }
-        else if(getDirection() == left && getWorld()->canMoveTo(getX() - 1, getY())) {
+        else if(getDirection() == left && (*getWorld())->canMoveTo(getX() - 1, getY())) {
             moveTo(getX() - 1, getY());
         }
-        else if(getDirection() == up && getWorld()->canMoveTo(getX(), getY() + 4)) {
+        else if(getDirection() == up && (*getWorld())->canMoveTo(getX(), getY() + 4)) {
             moveTo(getX(), getY() + 1);
         }
-        else if(getDirection() == down && getWorld()->canMoveTo(getX(), getY() - 1)) {
+        else if(getDirection() == down && (*getWorld())->canMoveTo(getX(), getY() - 1)) {
             moveTo(getX(), getY() - 1);
         }
         else {
