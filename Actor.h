@@ -89,15 +89,16 @@ public:
     // Pick up a sonar kit.
     void addSonar();
     // Pick up water.
-    void addWater();
+	void addWater(int w) { water += w; }
     // Get amount of gold
-    int getGold() const;
+	int getGold() const { return gold; }
     // Get amount of sonar charges
-    int getSonar() const;
+	int getSonar() const { return sonar; }
     // Get amount of water
-    int getWater() const;
+	int getWater() const { return water; }
     
 private:
+	int gold = 0, sonar = 1, water = 5;
     //ADD HERE
 };
 
