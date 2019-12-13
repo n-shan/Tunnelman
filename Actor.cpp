@@ -17,10 +17,10 @@ bool Agent::annoy(int amt) {
 bool Tunnelman::TunnelManInteracts(Direction d) 
 	//checks if boulder is in the way
 {
-	for (auto i = getWorld()->getActors().begin(); i != getWorld()->getActors().end(); i++)
+	for (auto i = (*getWorld())->getActors().begin(); i !=(*getWorld())->getActors().end(); i++)
 	{
 		if ((*i)->getID() == TID_BOULDER)
-			if (getWorld()->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, d))
+			if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, d))
 				return false;
 	}
 	return true;
@@ -161,15 +161,15 @@ bool Boulder::shouldBoulderFall(int x, int y)
 		return b;
 	for (int i = 0; i < 4; i++)
 	{
-		if (!getWorld()->getEarthGridPoint(getX() + i, getY() - 1)->isVisible())
+		if (!(*getWorld())->getEarthGridPoint(getX() + i, getY() - 1)->isVisible())
 			count++;
 	}
-	for (auto i = getWorld()->getActors().begin(); i < getWorld()->getActors().end(); i++)
+	for (auto i =(*getWorld())->getActors().begin(); i <(*getWorld())->getActors().end(); i++)
 	{	
 		if ((*i)->getID() == TID_BOULDER &&
 			!((*i)->getX() == getX() && (*i)->getY() == getY()))
 		{
-			std::string check = getWorld()->checkBounds(
+			std::string check =(*getWorld())->checkBounds(
 				(*i)->getX(), (*i)->getY(), 4, 4, getX(), getY(), Direction::down);
 			if(!(check == "outside"))
 				b = false;
@@ -203,12 +203,12 @@ void Boulder::doSomething()
 				if (shouldBoulderFall(getX(), getY())) //if it can keep falling
 				{
 					//check if protesters are going to be hit
-					for (auto i = getWorld()->getActors().begin(); i != getWorld()->getActors().end(); i++)
+					for (auto i =(*getWorld())->getActors().begin(); i !=(*getWorld())->getActors().end(); i++)
 					{
 						if ((*i)->getID() == TID_PROTESTER ||
 							(*i)->getID() == TID_HARD_CORE_PROTESTER)
 						{
-							if (getWorld()->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, down))
+							if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, down))
 //							if (getWorld()->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, none))
 							{
 								std::cout << "protester hit" << std::endl;
@@ -217,8 +217,8 @@ void Boulder::doSomething()
 						}
 					}
 					//check if player is going to be hit
-					if (getWorld()->withinRadius(getX(), getY(),
-						getWorld()->getTunnelMan()->getX(), getWorld()->getTunnelMan()->getY(), 3, 4, down))
+					if ((*getWorld())->withinRadius(getX(), getY(),
+						(*getWorld())->getTunnelMan()->getX(),(*getWorld())->getTunnelMan()->getY(), 3, 4, down))
 					{
 						//kill player
 						std::cout << "Tman hit" << std::endl;

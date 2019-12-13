@@ -28,7 +28,7 @@ int StudentWorld::init() {
 		int randomX = 30;
 		int randomY = 4;
 		createBoulder(randomX, randomY);
-		actors.push_back(make_unique<Boulder>(randomX, randomY, this));
+		actors.push_back(make_unique<Boulder>(std::make_shared<StudentWorld*>(this),randomX, randomY));
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
@@ -65,11 +65,11 @@ int StudentWorld::move() {
     return GWSTATUS_CONTINUE_GAME;
 }
 
-void StudentWorld::cleanUp() 
+void StudentWorld::cleanUp()
 {
-//	actors.clear(); //see if I need to delete each one or this this calls obj destructor
+	//	actors.clear(); //see if I need to delete each one or this this calls obj destructor
 	decLives();
-
+}
 
 void StudentWorld::createBoulder(int & x, int & y)
 {

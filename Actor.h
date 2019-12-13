@@ -81,7 +81,7 @@ public:
     : Agent( studentWorld, TID_PLAYER, 30, 60, right, 10) { setVisible(true); }
     
     virtual ~Tunnelman() { }
-    
+	bool TunnelManInteracts(Direction d);
     virtual void doSomething();
     virtual bool annoy(int amt); //TODO
     
@@ -198,13 +198,13 @@ public:
     virtual ~WaterPool() { }
     virtual void doSomething();
 private:
-    
 };
 
 class Boulder : public Actor
 { 
 public:
-	Boulder(int x, int y, StudentWorld * studentWorld) : Actor(TID_BOULDER, x, y, down, 1.0, 1, studentWorld) 
+	Boulder(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
+		: Actor(studentWorld, TID_BOULDER, startX, startY, down, 1.0, 1) 
 	{ 
 		setVisible(true); alive = true; stable = true; waiting = 30;
 	}
