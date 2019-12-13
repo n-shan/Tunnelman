@@ -142,7 +142,6 @@ private:
     
 };
 
-//CHECK IF ACTIVATING OBJECTS NEED StudentWorld PTR
 class ActivatingObject : public Actor {
 public:
     ActivatingObject(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, Direction dir, double size, int depth, bool is_Temp)
