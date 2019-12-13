@@ -1,5 +1,6 @@
 #include "Actor.h"
 #include "StudentWorld.h"
+
 //actor funtions
 
 //earth functions
@@ -14,11 +15,9 @@ bool Agent::annoy(int amt) {
 }
 
 //tunnelman functions
-bool Tunnelman::TunnelManInteracts(Direction d) 
+bool Tunnelman::TunnelManInteracts(Direction d) {
 	//checks if boulder is in the way
-{
-	for (auto i = (*getWorld())->getActors().begin(); i !=(*getWorld())->getActors().end(); i++)
-	{
+	for (auto i = (*getWorld())->getActors().begin(); i !=(*getWorld())->getActors().end(); i++) {
 		if ((*i)->getID() == TID_BOULDER)
 			if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, d))
 				return false;
@@ -26,8 +25,7 @@ bool Tunnelman::TunnelManInteracts(Direction d)
 	return true;
 }
 void Tunnelman::doSomething() {
-    if(getHitPoints() == 0)
-	{
+    if(getHitPoints() == 0) {
 		if (isAlive())
 			setDead();
         return;
@@ -88,8 +86,7 @@ void Tunnelman::doSomething() {
                 break;
             case KEY_PRESS_SPACE:
                 //add a Squirt in front of the player
-				if (getWater() > 0)
-				{
+				if (getWater() > 0) {
 					(*getWorld())->playSound(SOUND_PLAYER_SQUIRT);
 					if (getDirection() == right) {
 						(*getWorld())->createSquirt(getX() + 4, getY(), getDirection());
@@ -113,10 +110,12 @@ void Tunnelman::doSomething() {
 
 	}
 }
+
 //TODO
 bool Tunnelman::annoy(int amt) {
     return false;
 }
+
 //TODO
 void Tunnelman::addGold() {
     
@@ -152,23 +151,19 @@ void Squirt::doSomething() {
         //set state to dead
     }
 }
+
 //Boulder functions
-bool Boulder::shouldBoulderFall(int x, int y)
-{
+bool Boulder::shouldBoulderFall(int x, int y) {
 	int count = 0;
 	bool b = false;
 	if (y == 0) //if on the map floor
 		return b;
-	for (int i = 0; i < 4; i++)
-	{
+	for (int i = 0; i < 4; i++) {
 		if (!(*getWorld())->getEarthGridPoint(getX() + i, getY() - 1)->isVisible())
 			count++;
 	}
-	for (auto i =(*getWorld())->getActors().begin(); i <(*getWorld())->getActors().end(); i++)
-	{	
-		if ((*i)->getID() == TID_BOULDER &&
-			!((*i)->getX() == getX() && (*i)->getY() == getY()))
-		{
+	for (auto i =(*getWorld())->getActors().begin(); i <(*getWorld())->getActors().end(); i++) {
+		if ((*i)->getID() == TID_BOULDER && !((*i)->getX() == getX() && (*i)->getY() == getY())) {
 			std::string check =(*getWorld())->checkBounds(
 				(*i)->getX(), (*i)->getY(), 4, 4, getX(), getY(), Direction::down);
 			if(!(check == "outside"))
@@ -179,54 +174,42 @@ bool Boulder::shouldBoulderFall(int x, int y)
 		b = true;
 	return b;
 }
-void Boulder::doSomething()
-{
-	if (alive)
-	{
+void Boulder::doSomething() {
+	if (alive) {
 		bool shouldFall = shouldBoulderFall(getX(), getY());
-		if (stable)
-		{
-			if (shouldFall)
-			{
-				if (!waiting) //if waiting is over, start to fall
-				{
+		if (stable) {
+			if (shouldFall) {
+                //if waiting is over, start to fall
+				if (!waiting) {
 					//TODO: play sound 
 					stable = false;
 				}
 				waiting -= 1;
 			}
 		}
-		else
-		{
-			if (shouldFall)
-			{
-				if (shouldBoulderFall(getX(), getY())) //if it can keep falling
-				{
+		else {
+			if (shouldFall) {
+                //if it can keep falling
+				if (shouldBoulderFall(getX(), getY())) {
 					//check if protesters are going to be hit
 					for (auto i =(*getWorld())->getActors().begin(); i !=(*getWorld())->getActors().end(); i++)
 					{
-						if ((*i)->getID() == TID_PROTESTER ||
-							(*i)->getID() == TID_HARD_CORE_PROTESTER)
-						{
-							if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, down))
-//							if (getWorld()->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, none))
-							{
+						if ((*i)->getID() == TID_PROTESTER || (*i)->getID() == TID_HARD_CORE_PROTESTER) {
+							if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, down)) {
 								std::cout << "protester hit" << std::endl;
 								// kill protester
 							}
 						}
 					}
 					//check if player is going to be hit
-					if ((*getWorld())->withinRadius(getX(), getY(),
-						(*getWorld())->getTunnelMan()->getX(),(*getWorld())->getTunnelMan()->getY(), 3, 4, down))
-					{
+					if ((*getWorld())->withinRadius(getX(), getY(),(*getWorld())->getTunnelMan()->getX(),(*getWorld())->getTunnelMan()->getY(), 3, 4, down)) {
 						//kill player
 						std::cout << "Tman hit" << std::endl;
 					}
 					moveTo(getX(), getY() - 1);
 				}
-				if(shouldFall && !shouldBoulderFall(getX(),getY())) //if it hits ground
-				{
+                //if it hits ground
+				if(shouldFall && !shouldBoulderFall(getX(),getY())) {
 					alive = false;
 					setVisible(false);
 				}

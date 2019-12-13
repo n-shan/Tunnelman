@@ -8,7 +8,7 @@ class StudentWorld;
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 class Actor : public GraphObject {
 public:
-    Actor( std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, Direction dir, double size, int depth)
+    Actor(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, Direction dir, double size, int depth)
     : GraphObject(imageID, startX, startY, dir, size, depth) {
         setVisible(false);
         is_Alive = true;
@@ -44,7 +44,23 @@ private:
     
 };
 
-//BOUDLER : public Actor
+class Boulder : public Actor
+{
+public:
+    Boulder(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
+    : Actor(studentWorld, TID_BOULDER, startX, startY, down, 1.0, 1) {
+        setVisible(true);
+        alive = true;
+        stable = true;
+        waiting = 30;
+    }
+    virtual ~Boulder() { alive = false; }
+    virtual void doSomething();
+    bool shouldBoulderFall(int, int);
+private:
+    bool stable, alive;
+    int waiting;
+};
 
 class Squirt : public Actor {
 public:
@@ -199,132 +215,6 @@ public:
     virtual void doSomething();
 private:
 };
-
-class Boulder : public Actor
-{ 
-public:
-	Boulder(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
-		: Actor(studentWorld, TID_BOULDER, startX, startY, down, 1.0, 1) 
-	{ 
-		setVisible(true); alive = true; stable = true; waiting = 30;
-	}
-	virtual ~Boulder() { alive = false; }
-	virtual void doSomething();
-	bool shouldBoulderFall(int, int);
-private:
-	bool stable, alive;
-	int waiting;
-};
-//class Squirt : public Actor
-//{
-//public:
-//	Squirt();
-//	virtual ~Squirt() {}
-//	virtual void doSomething() {}
-//private:
-//
-//};
-//class Water : public Actor
-//{
-//public:
-//	Water();
-//	virtual ~Water() {}
-//	virtual void doSomething() {}
-//private:
-//
-//};
-//class Barrel : public Actor
-//{
-//public:
-//	Barrel();
-//	virtual ~Barrel() {}
-//	virtual void doSomething() {}
-//private:
-//
-//};
-//class Nugget : public Actor
-//{
-//public:
-//	Nugget();
-//	virtual ~Nugget() {}
-//	virtual void doSomething() {}
-//private:
-//
-//};
-//class SonarKit : public Actor
-//{
-//public:
-//	SonarKit();
-//	virtual ~SonarKit() {}
-//	virtual void doSomething() {}
-//private:
-//
-//};
-//class RegularProtester : public Actor
-//{
-//public:
-//	RegularProtester();
-//	virtual ~RegularProtester() {}
-//	virtual void doSomething() {}
-//private:
-//
-//};
-//class HardcoreProtester : public Actor
-//{
-//public:
-//	HardcoreProtester();
-//	virtual ~HardcoreProtester() {}
-//	virtual void doSomething() {}
-//private:
-//
-//};
-//PART2
-	//Boulders
-	//Squirt
-	//Water
-	//Barrels of Oil
-	//Gold Nuggets
-	//Sonar Kits
-	//Regular Protester
-	//Hardcore Protester
-
-//PART 1
-//Actor class
-	///constructor
-	//destructor
-	///derived from GraphObject
-	///Make itself visible via setVisible(true);
-	///virtual doSomething() (can be called by World)
-
-//Earth class
-	///constructor
-	//destructor
-	///Image ID: IMID_EARTH
-	///2D Array
-		//Initial tunnel
-	//Interaction with tunnelman (digging)
-//TunnelMan class
-	///constructor (spawn top-middle)
-	//destructor(restart level)
-	///Image ID: IMID_PLAYER
-	///Make itself visible via setVisible(true);
-	//virtual doSomething() (can be called by World)
-		//ALMOST DONE : Movement (WASD, Arrowkeys, NumPad Arrowkeys)
-			///Use GraphObject::moveTo() to animate changed X&Y coords
-
-//StudentWorld class
-	///Constructor (init all member vars for proper gameplay)
-	//Destructor (free any dynamically allocated memory [e.g. Earth & TunnelMan])
-	//Init() method
-		///create tunnelman
-		///create earth (figure out best data structure)
-			///Anything you want to track Earth & TunnelMan
-	//move() method
-		///Each tick, ask TunnelMan to doSomething()
-		///Does NOT check if TunnelMan is dead (b/c it's part 1 of project)
-	//cleanUp() method
-		//Same thing as destructor but program needs both cleanUp and destructor
-
 
 #endif // ACTOR_H_
 

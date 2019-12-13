@@ -11,28 +11,26 @@ GameWorld* createStudentWorld(string assetDir) {
 
 int StudentWorld::init() {
 	//display Game Stats
-//	setGameStatText(getStatText());
+    //setGameStatText(getStatText());
 	//display earth grid
     for(int i = 0; i < 60; i++) {
         for(int j = 0; j < 60; j++) {
             //create initial tunnel
             earthGrid[i][j] = make_unique<Earth>(i, j, false);
             if(i < 30 || i > 33 || j < 4)
-                earthGrid[i][j] = make_unique<Earth>(i, j, true);        }
+                earthGrid[i][j] = make_unique<Earth>(i, j, true);
+        }
     }
   	//display boulders
 	currentLevel = getLevel();
 	int B = min(currentLevel / 2 + 2, 9);
-	while (B)
-	{
+	while (B) {
 		int randomX = 30;
 		int randomY = 4;
 		createBoulder(randomX, randomY);
 		actors.push_back(make_unique<Boulder>(std::make_shared<StudentWorld*>(this),randomX, randomY));
-		for (int i = 0; i < 4; i++)
-		{
-			for (int j = 0; j < 4; j++)
-			{
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
 				earthGrid[randomX + i][randomY + j]->setVisible(false);
 			}
 		}
@@ -47,17 +45,16 @@ int StudentWorld::init() {
 int StudentWorld::move() {
     // This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
     // Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
-
 	//display Game Stats
 	setGameStatText(getStatText());
-
+    
 	for(auto it = actors.begin(); it != actors.end(); it++) {
         if(*it != nullptr)
             (*it)->doSomething();
     }
     tunnelMan->doSomething();
     dig();
-//	removeDeadActors(actors);
+    //	removeDeadActors(actors);
 	if (!tunnelMan->isAlive())
 		return GWSTATUS_PLAYER_DIED;
 	if (false) // if (getBarrels() == 0)
@@ -65,19 +62,16 @@ int StudentWorld::move() {
     return GWSTATUS_CONTINUE_GAME;
 }
 
-void StudentWorld::cleanUp()
-{
+void StudentWorld::cleanUp() {
 	//	actors.clear(); //see if I need to delete each one or this this calls obj destructor
 	decLives();
 }
 
-void StudentWorld::createBoulder(int & x, int & y)
-{
+void StudentWorld::createBoulder(int & x, int & y) {
 	x = rand() % 56;
 	y = rand() % 56;
 	bool InsideOtherActor = false;
-	for (auto it = actors.begin(); it != actors.end(); it++)
-	{
+	for (auto it = actors.begin(); it != actors.end(); it++) {
 		if (!InsideOtherActor)
 			InsideOtherActor = withinRadius(x, y, (*it)->getX(), (*it)->getY(), 6, 4, GraphObject::Direction::none);
 		else
@@ -88,8 +82,7 @@ void StudentWorld::createBoulder(int & x, int & y)
 		createBoulder(x, y);
 	return;
 }
-bool StudentWorld::withinRadius(int x, int y, int otherX, int otherY, int radius, int size, GraphObject::Direction d)
-{
+bool StudentWorld::withinRadius(int x, int y, int otherX, int otherY, int radius, int size, GraphObject::Direction d) {
 	int shiftX, shiftY;
 	switch (d)
 	{
@@ -120,9 +113,7 @@ bool StudentWorld::withinRadius(int x, int y, int otherX, int otherY, int radius
 		return true;
 	return false;
 }
-string StudentWorld::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, 
-	int X, int Y, GraphObject::Direction d)
-{
+string StudentWorld::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, GraphObject::Direction d) {
     int shiftX, shiftY;
 	string s = "";
     switch (d)
@@ -158,10 +149,10 @@ string StudentWorld::checkBounds(int boundX, int boundY, int boundShiftX, int bo
         s = "inside";
 	else
         s = "outside";
-} //all memory has garbage collection
+    return s;
+}
 
-std::string StudentWorld::getStatText()
-{
+std::string StudentWorld::getStatText() {
 	string s = "Scr:\t " + to_string(getScore())
 		+ " Lvl:\t " + to_string(getLevel()) 
 		+ " Lives: \t " + to_string(getLives())
@@ -251,14 +242,11 @@ bool StudentWorld::canMoveTo(int x, int y) {
         return !earthGrid[x][y]->isVisible();
 }
 
-void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>> actors) 
-{
-	for (auto it = actors.begin(); it != actors.end(); it++)
-	{
-		if (*it == nullptr)
-		{
-			it--;
-			actors.erase(it + 1);
-		}
-	}
+void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>> actors) {
+//	for (auto it = actors.begin(); it != actors.end(); it++) {
+//		if (*it == nullptr) {
+//			it--;
+//			actors.erase(it + 1);
+//		}
+//	}
 }
