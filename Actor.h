@@ -8,36 +8,36 @@ class StudentWorld;
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 class Actor : public GraphObject {
 public:
-    Actor(int imageID, int startX, int startY, Direction dir, double size, int depth, std::shared_ptr<StudentWorld*> studentWorld)
+    Actor( std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, Direction dir, double size, int depth)
     : GraphObject(imageID, startX, startY, dir, size, depth) {
         setVisible(false);
-        //allows actor to access student world
+        is_Alive = true;
         s_World = studentWorld;
     }
     virtual ~Actor() { }
+    
     virtual void doSomething() = 0;
+    
+    bool isAlive() const { return is_Alive; }
+    void setDead() { is_Alive = false; }
     std::shared_ptr<StudentWorld*> getWorld() { return s_World; }
+    
+    virtual bool annoy(int amt) { return false; } //TODO
+    
 protected:
-    std::shared_ptr<StudentWorld*> s_World;  //TODO : make shared ptr***
+    std::shared_ptr<StudentWorld*> s_World;
 private:
-    
-};
-
-class Agent : public Actor {
-public:
-    Agent(int imageID, int startX, int startY, Direction dir, double size, int depth, std::shared_ptr<StudentWorld*> studentWorld)
-    : Actor(imageID, startX, startY, dir, size, depth, studentWorld) { }
-    virtual ~Agent() { }
-private:
-    
+    bool is_Alive;
 };
 
 class Earth : public Actor {
 public:
-    Earth(int x, int y, bool isVisible) : Actor(TID_EARTH, x, y, right, .25, 3, nullptr) {
+    Earth(int x, int y, bool isVisible) : Actor(nullptr, TID_EARTH, x, y, right, .25, 3) {
         setVisible(isVisible);
     }
+    
     virtual ~Earth() { }
+    
     virtual void doSomething() { }
 private:
     
@@ -47,60 +47,120 @@ private:
 
 class Squirt : public Actor {
 public:
-    Squirt(int x, int y, Direction dir, std::shared_ptr<StudentWorld*> studentWorld) : Actor(TID_WATER_SPURT, x, y, dir, 1.0, 1, studentWorld) { disTraveled = 0; }
+    Squirt(std::shared_ptr<StudentWorld*> studentWorld, int x, int y, Direction dir) : Actor(studentWorld, TID_WATER_SPURT, x, y, dir, 1.0, 1) { disTraveled = 0; }
+    
     virtual ~Squirt() { }
+    
     virtual void doSomething();
 private:
     int disTraveled;
 };
 
-//CHECK IF ACTIVATING OBJECTS NEED StudentWorld PTR
-class ActivatingObject : public Actor {
+class Agent : public Actor {
 public:
-    ActivatingObject(int imageID, int startX, int startY, Direction dir, double size, int depth, std::shared_ptr<StudentWorld*> studentWorld, bool is_Temp)
-    : Actor(imageID, startX, startY, dir, size, depth, studentWorld) { isTemp = is_Temp; }
+    Agent(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, Direction dir, int HP)
+    : Actor(studentWorld, imageID, startX, startY, dir, 1.0, 0) { hitPoints = HP; }
+    
+    virtual ~Agent() { }
+    
+    virtual bool annoy(int amt); //TODO
+    // Pick up a gold nugget
+    virtual void addGold() = 0;
+    
+    int getHitPoints() const  { return hitPoints; }
+    
+    virtual bool canPickThingsUp() const; //TODO
 private:
-    bool isTemp;
+    int hitPoints;
 };
 
 class Tunnelman : public Agent {
 public:
-    Tunnelman(std::shared_ptr<StudentWorld*> studentWorld) : Agent(TID_PLAYER, 30, 60, right, 1.0, 0, studentWorld) {
-        setVisible(true);
-    }
-    virtual ~Tunnelman() { }
-    virtual void doSomething();
-private:
+    Tunnelman(std::shared_ptr<StudentWorld*> studentWorld)
+    : Agent( studentWorld, TID_PLAYER, 30, 60, right, 10) { setVisible(true); }
     
+    virtual ~Tunnelman() { }
+    
+    virtual void doSomething();
+    virtual bool annoy(int amt); //TODO
+    
+    //TODO :
+    virtual void addGold();
+    // Pick up a sonar kit.
+    void addSonar();
+    // Pick up water.
+    void addWater();
+    // Get amount of gold
+    int getGold() const;
+    // Get amount of sonar charges
+    int getSonar() const;
+    // Get amount of water
+    int getWater() const;
+    
+private:
+    //ADD HERE
 };
 
 class Protester : public Agent {
 public:
-    //Protestor(args) { }
+    Protester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, int HP)
+    : Agent(studentWorld, imageID, startX, startY, left, HP) { }
+    
     virtual ~Protester() { }
+    
+    virtual bool annoy(int amount);
+    
+    virtual void doSomething();
+    virtual void addGold();
 private:
     
 };
 
 class RegularProtester : public Protester {
 public:
-    //RegularProtester() { }
+    RegularProtester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY)
+    : Protester(studentWorld, imageID, startX, startY, 5) { }
+    
     virtual ~RegularProtester() { }
+    
+    virtual void doSomething();
+    virtual void addGold();
 private:
     
 };
 
 class HardCoreProtester : public Protester {
 public:
-    //HardCoreProtester() { }
+    HardCoreProtester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY)
+    : Protester(studentWorld, imageID, startX, startY, 20) { }
+    
     virtual ~HardCoreProtester() { }
+    
+    virtual void doSomething();
+    virtual void addGold();
 private:
     
 };
 
+//CHECK IF ACTIVATING OBJECTS NEED StudentWorld PTR
+class ActivatingObject : public Actor {
+public:
+    ActivatingObject(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, Direction dir, double size, int depth, bool is_Temp)
+    : Actor(studentWorld, imageID, startX, startY, dir, size, depth) { isTemp = is_Temp; }
+    
+    virtual ~ActivatingObject() { }
+    
+    
+private:
+    //defines whether the obj is temp or permanent
+    bool isTemp;
+};
+
 class OilBarrel : public ActivatingObject {
 public:
-    OilBarrel(int x, int y) : ActivatingObject(TID_BARREL, x, y, right, 1.0, 2, nullptr, false) { }
+    OilBarrel(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
+    : ActivatingObject(studentWorld, TID_BARREL, x, y, right, 1.0, 2, false) { }
+    
     virtual ~OilBarrel() { }
     virtual void doSomething();
 private:
@@ -109,24 +169,33 @@ private:
 
 class GoldNugget : public ActivatingObject {
 public:
-    GoldNugget(int x, int y, bool isVisible, bool isTemp) : ActivatingObject(TID_GOLD, x, y, right, 1.0, 2, nullptr, isTemp) { setVisible(isVisible); }
+    GoldNugget(std::shared_ptr<StudentWorld*> studentWorld, int x, int y, bool isVisible, bool isTemp)
+    : ActivatingObject(studentWorld, TID_GOLD, x, y, right, 1.0, 2, isTemp) { setVisible(isVisible); }
+    
     virtual ~GoldNugget() { }
+    virtual void doSomething();
 private:
     
 };
 
 class SonarKit : public ActivatingObject {
 public:
-    SonarKit(int x, int y) : ActivatingObject(TID_SONAR, x, y, right, 1.0, 2, nullptr, true) { setVisible(true); }
+    SonarKit(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
+    : ActivatingObject(studentWorld, TID_SONAR, x, y, right, 1.0, 2, true) { setVisible(true); }
+    
     virtual ~SonarKit() { }
+    virtual void doSomething();
 private:
     
 };
 
 class WaterPool : public ActivatingObject {
 public:
-    WaterPool(int x, int y) : ActivatingObject(TID_WATER_POOL, x, y, right, 1.0, 2, nullptr, true) { }
+    WaterPool(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
+    : ActivatingObject(studentWorld, TID_WATER_POOL, x, y, right, 1.0, 2, true) { }
+    
     virtual ~WaterPool() { }
+    virtual void doSomething();
 private:
     
 };

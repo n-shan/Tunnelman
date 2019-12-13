@@ -7,6 +7,15 @@
 
 //earth functions
 
+//agent functions
+bool Agent::canPickThingsUp() const {
+    return false;
+}
+
+bool Agent::annoy(int amt) {
+    return false;
+}
+
 //tunnelman functions
 void Tunnelman::doSomething() {
     //if(lives == 0)
@@ -78,6 +87,14 @@ void Tunnelman::doSomething() {
                 // etc...
         }
     }
+}
+//TODO
+bool Tunnelman::annoy(int amt) {
+    return false;
+}
+//TODO
+void Tunnelman::addGold() {
+    
 }
 
 //Squirt functions

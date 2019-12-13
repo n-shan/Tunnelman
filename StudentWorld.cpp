@@ -82,7 +82,7 @@ void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool i
 
 void StudentWorld::createSquirt(int x, int y, Actor::Direction dir) {
     if(canCreateAt(x, y)) {
-        std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(x, y, dir, std::make_shared<StudentWorld*>(this));
+        std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(std::make_shared<StudentWorld*>(this), x, y, dir);
         squirt->setVisible(true);
         actors.push_back(std::move(squirt));
     }
