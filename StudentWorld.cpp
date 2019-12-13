@@ -13,13 +13,13 @@ int StudentWorld::init() {
     for(int i = 0; i < 60; i++) {
         for(int j = 0; j < 60; j++) {
             //create initial tunnel
-            earthGrid[i][j].reset(new Earth(i, j, false));
+            earthGrid[i][j] = make_unique<Earth>(i, j, false);
             if(i < 30 || i > 33 || j < 4)
-                earthGrid[i][j].reset(new Earth(i, j, true));
-        }
+                earthGrid[i][j] = make_unique<Earth>(i, j, true);        }
     }
     //display tunnelman
-    tunnelMan.reset(new Tunnelman(this));
+    //tunnelMan.reset(new Tunnelman(this));
+    tunnelMan = std::make_unique<Tunnelman>(std::make_shared<StudentWorld*>(this));
     return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -82,7 +82,7 @@ void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool i
 
 void StudentWorld::createSquirt(int x, int y, Actor::Direction dir) {
     if(canCreateAt(x, y)) {
-        std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(x, y, dir, this);
+        std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(std::make_shared<StudentWorld*>(this), x, y, dir);
         squirt->setVisible(true);
         actors.push_back(std::move(squirt));
     }
