@@ -63,7 +63,7 @@ public:
     
     virtual ~Agent() { }
     
-    virtual bool annoy(int amt); //TODO
+	virtual bool annoy(int amt) { hitPoints += amt; }
     // Pick up a gold nugget
     virtual void addGold() = 0;
     
@@ -82,12 +82,14 @@ public:
     virtual ~Tunnelman() { }
     
     virtual void doSomething();
-    virtual bool annoy(int amt); //TODO
-    
+    virtual bool annoy(int amt); 
+		//shouted by protester is -2 hp
+		//if annoy makes hp == 0, play SOUND_PLAYER_GIVE_UP
+
     //TODO :
-    virtual void addGold();
+	virtual void addGold(int g) { gold += g; }
     // Pick up a sonar kit.
-    void addSonar();
+	void addSonar(int s) { sonar += s; }
     // Pick up water.
 	void addWater(int w) { water += w; }
     // Get amount of gold
