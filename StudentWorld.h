@@ -12,20 +12,34 @@
 
 class StudentWorld : public GameWorld {
 public:
-	StudentWorld(std::string assetDir) : GameWorld(assetDir) {}
-    ~StudentWorld() { } //all memory has garbage collection
+	StudentWorld(std::string assetDir) : GameWorld(assetDir) { }
+    virtual ~StudentWorld() { } //all memory has garbage collection
     virtual int init();
     virtual int move();
     virtual void cleanUp();
+    bool canCreateAt(int x, int y);
+    //check if location is occupied
+    bool canMoveTo(int x, int y);
+    //removes dead actors from oil field
+    void removeDeadActors(std::vector<std::unique_ptr<Actor>> actors);
+    //Returns string with current game stats
+	  std::string getStatText();
+	  //calls clearEarth depending on tunnelman's location
     void dig();
-	void clearEarth(int constLevel, int botOther, int yLevel, bool isX);
-	std::string checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY,
+    //clears the earth at a certain location
+    void clearEarth(int constLevel, int botOther, int yLevel, bool isX);
+    //creats a squirt at a certain location
+    void createSquirt(int x, int y, GraphObject::Direction dir);
+    //check if you can create an object at a location
+  
+	  std::string checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY,
 		int X, int Y, GraphObject::Direction d);
-	bool withinRadius(int x, int y, int otherX, int otherY, int radius, int size, GraphObject::Direction d);
-	std::unique_ptr<Earth> & getEarthGridPoint(int x, int y) { return earthGrid[x][y]; }
-	std::unique_ptr<Tunnelman> & getTunnelMan() { return tunnelMan; }
-	std::vector<std::unique_ptr<Actor>> & getActors () { return actors; }
-	void createBoulder(int &, int &);
+	  bool withinRadius(int x, int y, int otherX, int otherY, int radius, int size, GraphObject::Direction d);
+	  std::unique_ptr<Earth> & getEarthGridPoint(int x, int y) { return earthGrid[x][y]; }
+	  std::unique_ptr<Tunnelman> & getTunnelMan() { return tunnelMan; }
+	  std::vector<std::unique_ptr<Actor>> & getActors () { return actors; }
+	  void createBoulder(int &, int &);
+  
 private:
     std::unique_ptr<Earth> earthGrid[60][60];
 	//CREATE AN NEW GRID CALLED ISDUG WHICH 
