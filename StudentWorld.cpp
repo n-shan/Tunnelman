@@ -9,7 +9,9 @@ GameWorld* createStudentWorld(string assetDir) {
 }
 
 int StudentWorld::init() {
-    //display earth grid
+	//display Game Stats
+//	setGameStatText(getStatText());
+	//display earth grid
     for(int i = 0; i < 60; i++) {
         for(int j = 0; j < 60; j++) {
             //create initial tunnel
@@ -26,18 +28,43 @@ int StudentWorld::init() {
 int StudentWorld::move() {
     // This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
     // Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
-    //return GWSTATUS_PLAYER_DIED;
-    for(auto it = actors.begin(); it != actors.end(); it++) {
+
+	//display Game Stats
+	setGameStatText(getStatText());
+
+	for(auto it = actors.begin(); it != actors.end(); it++) {
         if(*it != nullptr)
             (*it)->doSomething();
     }
     tunnelMan->doSomething();
     dig();
+//	removeDeadActors(actors);
+	if (!tunnelMan->isAlive())
+		return GWSTATUS_PLAYER_DIED;
+	if (false) // if (getBarrels() == 0)
+		return GWSTATUS_FINISHED_LEVEL;
     return GWSTATUS_CONTINUE_GAME;
 }
 
-void StudentWorld::cleanUp() { } //all memory has garbage collection
+void StudentWorld::cleanUp() 
+{
+//	actors.clear(); //see if I need to delete each one or this this calls obj destructor
+	decLives();
 
+} //all memory has garbage collection
+
+std::string StudentWorld::getStatText()
+{
+	string s = "Scr:\t " + to_string(getScore())
+		+ " Lvl:\t " + to_string(getLevel()) 
+		+ " Lives: \t " + to_string(getLives())
+		+ " Hlth: \t " + to_string(tunnelMan->getHitPoints())
+		+ " Wtr: \t " + to_string(tunnelMan->getWater())
+		+ " Gld: \t " + to_string(tunnelMan->getGold())
+		+ " Sonar: \t " + to_string(tunnelMan->getSonar())
+		+ " Oil left:\t 0";
+	return s;
+}
 void StudentWorld::dig() {
     //dig depending on the direction
     if(tunnelMan->getDirection() == Actor::Direction::right) {
@@ -68,6 +95,7 @@ void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool i
         clearAmount = 60 - tunnelMan->getY();
     }
     //clear the earth
+	playSound(SOUND_DIG);
     for(int i = botOfLevel; i < botOfLevel + clearAmount ; i++) {
         if(isHoriz) {
             if(earthGrid[constLevel][i]->isVisible())
@@ -116,40 +144,14 @@ bool StudentWorld::canMoveTo(int x, int y) {
         return !earthGrid[x][y]->isVisible();
 }
 
-void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>> actors) {
-    
+void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>> actors) 
+{
+	for (auto it = actors.begin(); it != actors.end(); it++)
+	{
+		if (*it == nullptr)
+		{
+			it--;
+			actors.erase(it + 1);
+		}
+	}
 }
-
-//bool TunnelMan::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, Direction d) {
-//    int shiftX, shiftY;
-//    switch (d)
-//    {
-//    case none:
-//        shiftX = 0;
-//        shiftY = 0;
-//        return true;
-//    case up:
-//        shiftX = 0;
-//        shiftY = 1;
-//        break;
-//    case down:
-//        shiftX = 0;
-//        shiftY = -1;
-//        break;
-//    case left:
-//        shiftX = -1;
-//        shiftY = 0;
-//        break;
-//    case right:
-//        shiftX = 1;
-//        shiftY = 0;
-//        break;
-//    default:
-//        return true;
-//    }
-//    if (((X + shiftX) >= boundX && (X + shiftX) <= (boundShiftX - boundX))
-//        && ((Y + shiftY) >= boundY && (Y + shiftY) <= (boundShiftY - boundY)))
-//        return true;
-//    else
-//        return false;
-//}

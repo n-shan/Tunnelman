@@ -18,8 +18,12 @@ bool Agent::annoy(int amt) {
 
 //tunnelman functions
 void Tunnelman::doSomething() {
-    //if(lives == 0)
-        //return
+    if(getHitPoints() == 0)
+	{
+		if (isAlive())
+			setDead();
+        return;
+	}
     int ch;
     if ((*getWorld())->getKey(ch) == true) {
         // user hit a key this tick!
@@ -71,22 +75,30 @@ void Tunnelman::doSomething() {
                 break;
             case KEY_PRESS_SPACE:
                 //add a Squirt in front of the player
-                if(getDirection() == right) {
-                    (*getWorld())->createSquirt(getX() + 4, getY(), getDirection());
-                }
-                else if(getDirection() == left) {
-                    (*getWorld())->createSquirt(getX() - 4, getY(), getDirection());
-                }
-                else if(getDirection() == up) {
-                    (*getWorld())->createSquirt(getX(), getY() + 4, getDirection());
-                }
-                else if(getDirection() == down) {
-                    (*getWorld())->createSquirt(getX(), getY() - 4, getDirection());
-                }
-                break;
-                // etc...
+				if (getWater() > 0)
+				{
+					(*getWorld())->playSound(SOUND_PLAYER_SQUIRT);
+					if (getDirection() == right) {
+						(*getWorld())->createSquirt(getX() + 4, getY(), getDirection());
+					}
+					else if (getDirection() == left) {
+						(*getWorld())->createSquirt(getX() - 4, getY(), getDirection());
+					}
+					else if (getDirection() == up) {
+						(*getWorld())->createSquirt(getX(), getY() + 4, getDirection());
+					}
+					else if (getDirection() == down) {
+						(*getWorld())->createSquirt(getX(), getY() - 4, getDirection());
+					}
+					addWater(-1);
+				}
+                break;                
+			case KEY_PRESS_ESCAPE:
+				setDead();
+				break;
         }
-    }
+
+	}
 }
 //TODO
 bool Tunnelman::annoy(int amt) {
