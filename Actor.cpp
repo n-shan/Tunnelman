@@ -120,9 +120,17 @@ void Tunnelman::doSomething() {
 			break;
                 
         case 'z':
+        case 'Z':
                 if(getSonar() > 0) {
                     addSonar(-1);
+                    (*getWorld())->playSound(SOUND_SONAR);
                     //expose all hidden game objects within 12 from tunnelman
+                    for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++) {
+                        if((*getWorld())->withinRadius(getX(), getY(), (*it)->getX(), (*it)->getY(), 12, 4, getDirection())) {
+                            (*it)->setVisible(true);
+                        }
+                    
+                    }
                 }
         }
         
@@ -244,9 +252,6 @@ void OilBarrel::doSomething() {
 				(*getWorld())->addBarrel(-1);
 				setDead();
 			}
-		}
-		else {
-			setVisible(false);
 		}
 	}
 }

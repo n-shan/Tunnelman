@@ -184,6 +184,7 @@ class OilBarrel : public ActivatingObject {
 public:
 	OilBarrel(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
 		: ActivatingObject(studentWorld, TID_BARREL, x, y, right, 1.0, 2, false) {
+            setVisible(false);
 	}
 	virtual ~OilBarrel() { }
 	virtual void doSomething();
