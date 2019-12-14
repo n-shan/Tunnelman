@@ -51,15 +51,14 @@ public:
     Boulder(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
     : Actor(studentWorld, TID_BOULDER, startX, startY, down, 1.0, 1) {
         setVisible(true);
-        alive = true;
         stable = true;
         waiting = 30;
     }
-    virtual ~Boulder() { alive = false; }
+    virtual ~Boulder() {}
     virtual void doSomething();
     bool shouldBoulderFall(int, int);
 private:
-    bool stable, alive;
+	bool stable;
     int waiting;
 };
 
@@ -177,12 +176,12 @@ private:
 class OilBarrel : public ActivatingObject {
 public:
     OilBarrel(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
-    : ActivatingObject(studentWorld, TID_BARREL, x, y, right, 1.0, 2, false) { }
+		: ActivatingObject(studentWorld, TID_BARREL, x, y, right, 1.0, 2, false) {
+	}
     
     virtual ~OilBarrel() { }
     virtual void doSomething();
 private:
-    
 };
 
 class GoldNugget : public ActivatingObject {
