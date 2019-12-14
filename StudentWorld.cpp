@@ -40,6 +40,9 @@ int StudentWorld::init() {
 		}
 		B--;
 	}
+    //gold nuggets
+    int G = max(5 - currentLevel/2, 2);
+    
     //display tunnelman
     tunnelMan = std::make_unique<Tunnelman>(std::make_shared<StudentWorld*>(this));
     return GWSTATUS_CONTINUE_GAME;

@@ -121,11 +121,6 @@ bool Tunnelman::annoy(int amt) {
 	return false;
 }
 
-//TODO
-void Tunnelman::addGold() {
-
-}
-
 //Squirt functions
 void Squirt::doSomething() {
     //TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
@@ -264,12 +259,22 @@ void WaterPool::doSomething() {
 //GoldNugget functions
 void GoldNugget::doSomething() {
     if(isAlive()) {
-        //if(!isVisible() && tunnelman is within radius of 4)
-        if(tManCanPickUp) {
-            
+        //if gold is not visible and tunnelman is within 4
+        if(!isVisible() && (*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), getX(), getY(), 4, 4, (*getWorld())->getTunnelMan()->getDirection())) {
+            setVisible(true);
+            return;
         }
-        else {
-            
+        else if(tManCanPickUp && (*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), getX(), getY(), 3, 4, (*getWorld())->getTunnelMan()->getDirection())) {
+            setDead();
+            (*getWorld())->playSound(SOUND_GOT_GOODIE);
+            (*getWorld())->increaseScore(10);
+            (*getWorld())->getTunnelMan()->addGold(1);
+        }
+        else if(!tManCanPickUp /*&& within 3 from protestor*/) {
+            setDead();
+            (*getWorld())->playSound(SOUND_PROTESTER_FOUND_GOLD);
+            //tell protester it found gold
+            (*getWorld())->increaseScore(25);
         }
     }
 }

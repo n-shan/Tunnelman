@@ -82,7 +82,7 @@ public:
     
     virtual bool annoy(int amt); //TODO
     // Pick up a gold nugget
-    virtual void addGold() = 0;
+    virtual void addGold(int amt) = 0;
     
     int getHitPoints() const  { return hitPoints; }
     
@@ -102,7 +102,7 @@ public:
     virtual bool annoy(int amt); //TODO
     
     //TODO :
-    virtual void addGold();
+    virtual void addGold(int amt) { gold += amt; }
     // Pick up a sonar kit.
     void addSonar();
     // Pick up water.
@@ -190,12 +190,17 @@ public:
     : ActivatingObject(studentWorld, TID_GOLD, x, y, right, 1.0, 2, isTemp) {
         setVisible(isVisible);
         tManCanPickUp = canTmanPickUp;
+        if(isTemp) 
+            tOnField = 100;
+        else
+            tOnField = -1;
     }
     
     virtual ~GoldNugget() { }
     virtual void doSomething();
 private:
     bool tManCanPickUp;
+    bool tOnField;
 };
 
 class SonarKit : public ActivatingObject {
