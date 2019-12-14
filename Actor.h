@@ -22,6 +22,7 @@ public:
     bool isAlive() const { return is_Alive; }
     void setDead() { is_Alive = false; }
     std::shared_ptr<StudentWorld*> getWorld() { return s_World; }
+    int getLevel();
     
     virtual bool annoy(int amt) { return false; } //TODO
     
@@ -209,11 +210,15 @@ private:
 class WaterPool : public ActivatingObject {
 public:
     WaterPool(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
-    : ActivatingObject(studentWorld, TID_WATER_POOL, x, y, right, 1.0, 2, true) { }
+    : ActivatingObject(studentWorld, TID_WATER_POOL, x, y, right, 1.0, 2, true) {
+        setVisible(true);
+        tOnField = std::max(100, 300 - 10 * getLevel());
+    }
     
     virtual ~WaterPool() { }
     virtual void doSomething();
 private:
+    int tOnField;
 };
 
 #endif // ACTOR_H_
