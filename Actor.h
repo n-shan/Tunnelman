@@ -2,6 +2,7 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
+#include <algorithm>
 
 class StudentWorld;
 
@@ -178,7 +179,6 @@ public:
     OilBarrel(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
 		: ActivatingObject(studentWorld, TID_BARREL, x, y, right, 1.0, 2, false) {
 	}
-    
     virtual ~OilBarrel() { }
     virtual void doSomething();
 private:
@@ -193,14 +193,16 @@ public:
         if(isTemp) 
             tOnField = 100;
         else
-            tOnField = -1;
+            tOnField = 0;
     }
     
     virtual ~GoldNugget() { }
     virtual void doSomething();
 private:
     bool tManCanPickUp;
-    bool tOnField;
+    int tOnField;
+//	bool tOnField;
+
 };
 
 class SonarKit : public ActivatingObject {

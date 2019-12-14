@@ -108,6 +108,14 @@ void Tunnelman::doSomething() {
 				addWater(-1);
 			}
 			break;
+		case KEY_PRESS_TAB:
+			if (getGold() > 0)
+			{
+			addGold(-1);
+			(*getWorld())->getActors().push_back(std::move(std::make_unique<GoldNugget>
+				(std::make_shared<StudentWorld*>(*getWorld()), getX(), getY(), true, true, false)));
+			}
+			break;
 		case KEY_PRESS_ESCAPE:
 			setDead();
 			break;
@@ -260,7 +268,7 @@ void WaterPool::doSomething() {
 void GoldNugget::doSomething() {
     if(isAlive()) {
         //if gold is not visible and tunnelman is within 4
-        if(!isVisible() && (*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), getX(), getY(), 4, 4, (*getWorld())->getTunnelMan()->getDirection())) {
+        if(tManCanPickUp && !isVisible() && (*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), getX(), getY(), 4, 4, (*getWorld())->getTunnelMan()->getDirection())) {
             setVisible(true);
             return;
         }
@@ -271,7 +279,10 @@ void GoldNugget::doSomething() {
             (*getWorld())->getTunnelMan()->addGold(1);
         }
         else if(!tManCanPickUp /*&& within 3 from protestor*/) {
-            setDead();
+			if (tOnField)
+				tOnField--;
+			if (!tOnField)
+				setDead();
             (*getWorld())->playSound(SOUND_PROTESTER_FOUND_GOLD);
             //tell protester it found gold
             (*getWorld())->increaseScore(25);

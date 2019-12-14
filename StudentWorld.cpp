@@ -27,22 +27,8 @@ int StudentWorld::init() {
 	barrels = min(currentLevel + 2, 21);
 	createActivatingObject(ActivatedObject(min(currentLevel / 2 + 2, 9), "Boulder"));
 	createActivatingObject(ActivatedObject(barrels, "OilBarrel"));
-	int B = min(currentLevel / 2 + 2, 9);
-	while (B) {
-		int randomX = 30;
-		int randomY = 4;
-		findOpenPos(randomX, randomY);
-		actors.push_back(make_unique<Boulder>(std::make_shared<StudentWorld*>(this),randomX, randomY));
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				earthGrid[randomX + i][randomY + j]->setVisible(false);
-			}
-		}
-		B--;
-	}
-    //gold nuggets
-    int G = max(5 - currentLevel/2, 2);
-    
+	createActivatingObject(ActivatedObject(std::max(5 - currentLevel / 2, 2), "GoldNugget"));
+
     //display tunnelman
     tunnelMan = std::make_unique<Tunnelman>(std::make_shared<StudentWorld*>(this));
     return GWSTATUS_CONTINUE_GAME;
@@ -114,10 +100,16 @@ void StudentWorld::createActivatingObject(ActivatedObject obj) {
 			clearSquare(randomX, randomY);
 		}
 		else if (obj.classType == "OilBarrel") {
-			std::cout << randomX << " " << randomY << std::endl;
+			std::cout << randomX << " Oil " << randomY << std::endl;
 			std::unique_ptr<OilBarrel> oil = std::make_unique<OilBarrel>
 				(std::make_shared<StudentWorld*>(this), randomX, randomY);
 			actors.push_back(std::move(oil));
+		}
+		else if (obj.classType == "GoldNugget") {
+			std::cout << randomX << " Gold " << randomY << std::endl;
+			std::unique_ptr<GoldNugget> nugget = std::make_unique<GoldNugget>
+				(std::make_shared<StudentWorld*>(this), randomX, randomY, false, false, true);
+			actors.push_back(std::move(nugget));
 		}
 		obj.numOfObjects--;
 	}
