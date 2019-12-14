@@ -109,8 +109,7 @@ void Tunnelman::doSomething() {
 			}
 			break;
 		case KEY_PRESS_TAB:
-			if (getGold() > 0)
-			{
+			if (getGold() > 0) {
 				addGold(-1);
 				(*getWorld())->getActors().push_back(std::move(std::make_unique<GoldNugget>
 					(std::make_shared<StudentWorld*>(*getWorld()), getX(), getY(), true, true, false)));
@@ -119,7 +118,22 @@ void Tunnelman::doSomething() {
 		case KEY_PRESS_ESCAPE:
 			setDead();
 			break;
-		}
+                
+        case 'z':
+        case 'Z':
+                if(getSonar() > 0) {
+                    addSonar(-1);
+                    (*getWorld())->playSound(SOUND_SONAR);
+                    //expose all hidden game objects within 12 from tunnelman
+                    for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++) {
+                        if((*getWorld())->withinRadius(getX(), getY(), (*it)->getX(), (*it)->getY(), 12, 4, getDirection())) {
+                            (*it)->setVisible(true);
+                        }
+                    
+                    }
+                }
+        }
+        
 
 	}
 }
@@ -239,9 +253,6 @@ void OilBarrel::doSomething() {
 				setDead();
 			}
 		}
-		else {
-			setVisible(false);
-		}
 	}
 }
 
@@ -288,4 +299,23 @@ void GoldNugget::doSomething() {
 			(*getWorld())->increaseScore(25);
 		}
 	}
+}
+
+//SonarKit functions
+void SonarKit::doSomething() {
+    if(isAlive()) {
+        if (tOnField == 0) {
+            setDead();
+            return;
+        }
+        //check if tunnelman is within 3 of the sonar kit
+        if ((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(),
+        getX(), getY(), 3, 4, (*getWorld())->getTunnelMan()->getDirection())) {
+            setDead();
+            (*getWorld())->playSound(SOUND_GOT_GOODIE);
+            (*getWorld())->getTunnelMan()->addSonar(1);
+            (*getWorld())->increaseScore(75);
+        }
+        tOnField--;
+    }
 }

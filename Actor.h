@@ -109,7 +109,7 @@ public:
 	//TODO :
 	virtual void addGold(int amt) { gold += amt; }
 	// Pick up a sonar kit.
-	void addSonar();
+    void addSonar(int amt) { sonar += amt; }
 	// Pick up water.
 	void addWater(int w) { water += w; }
 	// Get amount of gold
@@ -184,6 +184,7 @@ class OilBarrel : public ActivatingObject {
 public:
 	OilBarrel(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
 		: ActivatingObject(studentWorld, TID_BARREL, x, y, right, 1.0, 2, false) {
+            setVisible(false);
 	}
 	virtual ~OilBarrel() { }
 	virtual void doSomething();
@@ -215,13 +216,14 @@ class SonarKit : public ActivatingObject {
 public:
 	SonarKit(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
 		: ActivatingObject(studentWorld, TID_SONAR, x, y, right, 1.0, 2, true) {
-		setVisible(true);
+            setVisible(true);
+            tOnField = std::max(100, 300 - 10 * getLevel());
 	}
 
 	virtual ~SonarKit() { }
 	virtual void doSomething();
 private:
-
+    int tOnField;
 };
 
 class WaterPool : public ActivatingObject {
