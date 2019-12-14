@@ -187,13 +187,16 @@ private:
 
 class GoldNugget : public ActivatingObject {
 public:
-    GoldNugget(std::shared_ptr<StudentWorld*> studentWorld, int x, int y, bool isVisible, bool isTemp)
-    : ActivatingObject(studentWorld, TID_GOLD, x, y, right, 1.0, 2, isTemp) { setVisible(isVisible); }
+    GoldNugget(std::shared_ptr<StudentWorld*> studentWorld, int x, int y, bool isVisible, bool isTemp, bool canTmanPickUp)
+    : ActivatingObject(studentWorld, TID_GOLD, x, y, right, 1.0, 2, isTemp) {
+        setVisible(isVisible);
+        tManCanPickUp = canTmanPickUp;
+    }
     
     virtual ~GoldNugget() { }
     virtual void doSomething();
 private:
-    
+    bool tManCanPickUp;
 };
 
 class SonarKit : public ActivatingObject {

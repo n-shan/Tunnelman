@@ -241,3 +241,15 @@ void WaterPool::doSomething() {
     }
 }
 
+//GoldNugget functions
+void GoldNugget::doSomething() {
+    if(isAlive()) {
+        //if(!isVisible() && tunnelman is within radius of 4)
+        if(tManCanPickUp) {
+            
+        }
+        else {
+            
+        }
+    }
+}
