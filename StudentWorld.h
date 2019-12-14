@@ -33,6 +33,8 @@ public:
     void clearEarth(int constLevel, int botOther, int yLevel, bool isX);
     //creats a squirt at a certain location
     void createSquirt(int x, int y, GraphObject::Direction dir);
+    //created a water pool at a certain location
+    bool createWaterPool(int x, int y);
  
     std::string checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, GraphObject::Direction d);
     

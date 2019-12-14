@@ -2,6 +2,9 @@
 #include "StudentWorld.h"
 
 //actor funtions
+int Actor::getLevel() {
+    return (*getWorld())->getLevel();
+}
 
 //earth functions
 
@@ -125,7 +128,7 @@ void Tunnelman::addGold() {
 void Squirt::doSomething() {
     //TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
     //if the squirt can travel
-    if(disTraveled < 4) {
+    if(disTraveled < 4 && isAlive()) {
         if(getDirection() == right && (*getWorld())->canMoveTo(getX() + 4, getY())) {
             moveTo(getX() + 1, getY());
         }
@@ -218,3 +221,23 @@ void Boulder::doSomething() {
 		}
 	}
 }
+
+//WaterPool functions
+void WaterPool::doSomething() {
+    if(isAlive()) {
+        if(tOnField == 0) {
+            setDead();
+            return;
+        }
+        //check if tunnelman is within 3 of the waterpool
+        if((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(),
+                                       getX(), getY(), 3, 4, (*getWorld())->getTunnelMan()->getDirection())) {
+            setDead();
+            (*getWorld())->playSound(SOUND_GOT_GOODIE);
+            (*getWorld())->getTunnelMan()->addWater(5);
+            (*getWorld())->increaseScore(100);
+        }
+        tOnField--;
+    }
+}
+
