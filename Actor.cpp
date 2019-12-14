@@ -138,17 +138,18 @@ void Squirt::doSomething() {
         else if(getDirection() == down && (*getWorld())->canMoveTo(getX(), getY() - 1)) {
             moveTo(getX(), getY() - 1);
         }
+        //if the squirt cannot move
         else {
             setVisible(false);
-            //set state to dead
+            setDead();
             return;
         }
         disTraveled++;
     }
-    //if the squirt cannot travel
+    //if the squirt has traveled the max distance
     else {
         setVisible(false);
-        //set state to dead
+        setDead();
     }
 }
 

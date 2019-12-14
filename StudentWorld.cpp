@@ -27,7 +27,7 @@ int StudentWorld::init() {
 	while (B) {
 		int randomX = 30;
 		int randomY = 4;
-		createBoulder(randomX, randomY);
+		findOpenPos(randomX, randomY);
 		actors.push_back(make_unique<Boulder>(std::make_shared<StudentWorld*>(this),randomX, randomY));
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -54,7 +54,7 @@ int StudentWorld::move() {
     }
     tunnelMan->doSomething();
     dig();
-    //	removeDeadActors(actors);
+    removeDeadActors(actors);
 	if (!tunnelMan->isAlive())
 		return GWSTATUS_PLAYER_DIED;
 	if (false) // if (getBarrels() == 0)
@@ -63,11 +63,13 @@ int StudentWorld::move() {
 }
 
 void StudentWorld::cleanUp() {
-	//	actors.clear(); //see if I need to delete each one or this this calls obj destructor
-	decLives();
+    for(auto it = actors.begin(); it != actors.end();) {
+        it = actors.erase(it);
+    }
+    decLives();
 }
 
-void StudentWorld::createBoulder(int & x, int & y) {
+void StudentWorld::findOpenPos(int & x, int & y) {
 	x = rand() % 56;
 	y = rand() % 56;
 	bool InsideOtherActor = false;
@@ -79,7 +81,7 @@ void StudentWorld::createBoulder(int & x, int & y) {
 	}
 	//while the coords are in the tunnel || in another boulder	
 	if (!((x < 27 || x > 33 || y < 4)) || InsideOtherActor)
-		createBoulder(x, y);
+		findOpenPos(x, y);
 	return;
 }
 bool StudentWorld::withinRadius(int x, int y, int otherX, int otherY, int radius, int size, GraphObject::Direction d) {
@@ -242,11 +244,12 @@ bool StudentWorld::canMoveTo(int x, int y) {
         return !earthGrid[x][y]->isVisible();
 }
 
-void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>> actors) {
-//	for (auto it = actors.begin(); it != actors.end(); it++) {
-//		if (*it == nullptr) {
-//			it--;
-//			actors.erase(it + 1);
-//		}
-//	}
+void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>>& actors) {
+    for(auto it = actors.begin(); it != actors.end();) {
+        if(!(*it)->isAlive()) {
+            it = actors.erase(it);
+        }
+        else
+            it++;
+    }
 }

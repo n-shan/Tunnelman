@@ -24,7 +24,7 @@ public:
     //check if location is occupied
     bool canMoveTo(int x, int y);
     //removes dead actors from oil field
-    void removeDeadActors(std::vector<std::unique_ptr<Actor>> actors);
+    void removeDeadActors(std::vector<std::unique_ptr<Actor>>& actors);
     //Returns string with current game stats
     std::string getStatText();
     //calls clearEarth depending on tunnelman's location
@@ -39,11 +39,12 @@ public:
     bool withinRadius(int x, int y, int otherX, int otherY, int radius, int size, GraphObject::Direction d);
     
     std::unique_ptr<Earth> & getEarthGridPoint(int x, int y) { return earthGrid[x][y]; }
+    
     std::unique_ptr<Tunnelman> & getTunnelMan() { return tunnelMan; }
     
     std::vector<std::unique_ptr<Actor>> & getActors () { return actors; }
     
-    void createBoulder(int &, int &);
+    void findOpenPos(int &, int &);
     
 private:
     std::unique_ptr<Earth> earthGrid[60][60];
