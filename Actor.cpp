@@ -2,6 +2,9 @@
 #include "StudentWorld.h"
 
 //actor funtions
+int Actor::getLevel() {
+    return (*getWorld())->getLevel();
+}
 
 //earth functions
 
@@ -125,34 +128,34 @@ void Tunnelman::addGold() {
 
 //Squirt functions
 void Squirt::doSomething() {
-	//TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
-	//if the squirt can travel
-	if (disTraveled < 4) {
-		if (getDirection() == right && (*getWorld())->canMoveTo(getX() + 4, getY())) {
-			moveTo(getX() + 1, getY());
-		}
-		else if (getDirection() == left && (*getWorld())->canMoveTo(getX() - 1, getY())) {
-			moveTo(getX() - 1, getY());
-		}
-		else if (getDirection() == up && (*getWorld())->canMoveTo(getX(), getY() + 4)) {
-			moveTo(getX(), getY() + 1);
-		}
-		else if (getDirection() == down && (*getWorld())->canMoveTo(getX(), getY() - 1)) {
-			moveTo(getX(), getY() - 1);
-		}
-		//if the squirt cannot move
-		else {
-			setVisible(false);
-			setDead();
-			return;
-		}
-		disTraveled++;
-	}
-	//if the squirt has traveled the max distance
-	else {
-		setVisible(false);
-		setDead();
-	}
+    //TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
+    //if the squirt can travel
+    if(disTraveled < 4 && isAlive()) {
+        if(getDirection() == right && (*getWorld())->canMoveTo(getX() + 4, getY())) {
+            moveTo(getX() + 1, getY());
+        }
+        else if(getDirection() == left && (*getWorld())->canMoveTo(getX() - 1, getY())) {
+            moveTo(getX() - 1, getY());
+        }
+        else if(getDirection() == up && (*getWorld())->canMoveTo(getX(), getY() + 4)) {
+            moveTo(getX(), getY() + 1);
+        }
+        else if(getDirection() == down && (*getWorld())->canMoveTo(getX(), getY() - 1)) {
+            moveTo(getX(), getY() - 1);
+        }
+        //if the squirt cannot move
+        else {
+            setVisible(false);
+            setDead();
+            return;
+        }
+        disTraveled++;
+    }
+    //if the squirt has traveled the max distance
+    else {
+        setVisible(false);
+        setDead();
+    }
 }
 
 //Boulder functions
@@ -219,6 +222,7 @@ void Boulder::doSomething() {
 		}
 	}
 }
+
 //OilBarrel functions
 void OilBarrel::doSomething()
 {
@@ -242,4 +246,36 @@ void OilBarrel::doSomething()
 			setVisible(false);
 		}
 	}
+}
+
+//WaterPool functions
+void WaterPool::doSomething() {
+    if(isAlive()) {
+        if(tOnField == 0) {
+            setDead();
+            return;
+        }
+        //check if tunnelman is within 3 of the waterpool
+        if((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(),
+                                       getX(), getY(), 3, 4, (*getWorld())->getTunnelMan()->getDirection())) {
+            setDead();
+            (*getWorld())->playSound(SOUND_GOT_GOODIE);
+            (*getWorld())->getTunnelMan()->addWater(5);
+            (*getWorld())->increaseScore(100);
+        }
+        tOnField--;
+    }
+}
+
+//GoldNugget functions
+void GoldNugget::doSomething() {
+    if(isAlive()) {
+        //if(!isVisible() && tunnelman is within radius of 4)
+        if(tManCanPickUp) {
+            
+        }
+        else {
+            
+        }
+    }
 }

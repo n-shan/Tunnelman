@@ -23,11 +23,25 @@ int StudentWorld::init() {
     }
   	//display ActivatingObjects
 	currentLevel = getLevel();
+
 	barrels = min(currentLevel + 2, 21);
 	createActivatingObject(ActivatedObject(min(currentLevel / 2 + 2, 9), "Boulder"));
 	createActivatingObject(ActivatedObject(barrels, "OilBarrel"));
 	//createActivatingObject(ActivatedObject(min(currentLevel + 2, 21), "GoldNugget"));
-	//display tunnelman
+	int B = min(currentLevel / 2 + 2, 9);
+	while (B) {
+		int randomX = 30;
+		int randomY = 4;
+		findOpenPos(randomX, randomY);
+		actors.push_back(make_unique<Boulder>(std::make_shared<StudentWorld*>(this),randomX, randomY));
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				earthGrid[randomX + i][randomY + j]->setVisible(false);
+			}
+		}
+		B--;
+	}
+    //display tunnelman
     tunnelMan = std::make_unique<Tunnelman>(std::make_shared<StudentWorld*>(this));
     return GWSTATUS_CONTINUE_GAME;
 }
@@ -37,6 +51,28 @@ int StudentWorld::move() {
     // Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
 	//display Game Stats
 	setGameStatText(getStatText());
+    
+    int G = getLevel() * 25 + 300;
+    int num = rand() % G + 1;
+    //if 1/G, add sonar or water
+    if(num == G) {
+        //cout << "1 in G" << endl;
+        num = rand() % 5 + 1;
+        //add sonar
+        if(num == 5) {
+            //add sonar at x = 0, y = 60
+        }
+        //add water
+        else {
+            int x = rand() % 56;
+            int y = rand() % 56;
+            while(!canCreateAt(x, y)) {
+                x = rand() % 56;
+                y = rand() % 56;
+            }
+            createWaterPool(x, y);
+        }
+    }
     
 	for(auto it = actors.begin(); it != actors.end(); it++) {
         if(*it != nullptr)
@@ -242,6 +278,15 @@ void StudentWorld::createSquirt(int x, int y, Actor::Direction dir) {
         squirt->setVisible(true);
         actors.push_back(std::move(squirt));
     }
+}
+
+bool StudentWorld::createWaterPool(int x, int y) {
+    if(canCreateAt(x, y)) {
+        std::unique_ptr<WaterPool> waterPool = std::make_unique<WaterPool>(std::make_shared<StudentWorld*>(this), x, y);
+        actors.push_back(std::move(waterPool));
+        return true;
+    }
+    return false;
 }
 
 //check if you can create an object at a location

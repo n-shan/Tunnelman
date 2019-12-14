@@ -29,13 +29,18 @@ public:
     std::string getStatText();
     //calls clearEarth depending on tunnelman's location
     void dig();
-	//clears 4x4 given at a certain location
-	void clearSquare(int x, int y);
+	  //clears 4x4 given at a certain location
+	  void clearSquare(int x, int y);
     //clears the earth at a certain location
     void clearEarth(int constLevel, int botOther, int yLevel, bool isX);
     //creats a squirt at a certain location
     void createSquirt(int x, int y, GraphObject::Direction dir);
+
 	//Checks if an actor is or will be in another actor depending on its current direction
+
+    //created a water pool at a certain location
+    bool createWaterPool(int x, int y);
+ 
     std::string checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, GraphObject::Direction d);
 	//Checks if two actors are within a give radius of each other by comparing the middle of both actors    
     bool withinRadius(int x, int y, int otherX, int otherY, int radius, int size, GraphObject::Direction d);
