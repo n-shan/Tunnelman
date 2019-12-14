@@ -180,6 +180,7 @@ bool Boulder::shouldBoulderFall(int x, int y) {
 		b = true;
 	return b;
 }
+
 void Boulder::doSomething() {
 	if (isAlive()) {
 		bool shouldFall = shouldBoulderFall(getX(), getY());
@@ -224,25 +225,18 @@ void Boulder::doSomething() {
 }
 
 //OilBarrel functions
-void OilBarrel::doSomething()
-{
-	if (isAlive())
-	{
-		if ((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(),
-			(*getWorld())->getTunnelMan()->getY(), getX(), getY(), 4, 4, (*getWorld())->getTunnelMan()->getDirection()))
-		{
+void OilBarrel::doSomething() {
+	if (isAlive()) {
+		if ((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), getX(), getY(), 4, 4, (*getWorld())->getTunnelMan()->getDirection())) {
 			setVisible(true);
-			if ((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(),
-				(*getWorld())->getTunnelMan()->getY(), getX(), getY(), 3, 4, (*getWorld())->getTunnelMan()->getDirection()))
-			{
+			if ((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), getX(), getY(), 3, 4, (*getWorld())->getTunnelMan()->getDirection())) {
 				(*getWorld())->increaseScore(1000);
 				(*getWorld())->playSound(SOUND_FOUND_OIL);
 				(*getWorld())->addBarrel(-1);
 				setDead();
 			}
 		}
-		else
-		{
+		else {
 			setVisible(false);
 		}
 	}

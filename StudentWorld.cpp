@@ -27,7 +27,6 @@ int StudentWorld::init() {
 	barrels = min(currentLevel + 2, 21);
 	createActivatingObject(ActivatedObject(min(currentLevel / 2 + 2, 9), "Boulder"));
 	createActivatingObject(ActivatedObject(barrels, "OilBarrel"));
-	//createActivatingObject(ActivatedObject(min(currentLevel + 2, 21), "GoldNugget"));
 	int B = min(currentLevel / 2 + 2, 9);
 	while (B) {
 		int randomX = 30;
@@ -100,28 +99,23 @@ void StudentWorld::cleanUp() {
 	}
 }
 
-void StudentWorld::createActivatingObject(ActivatedObject obj)
-{
+void StudentWorld::createActivatingObject(ActivatedObject obj) {
 	while (obj.numOfObjects) {
 		int randomX = 0;
 		int randomY = 0;
 		findOpenPos(randomX, randomY);
-		if (obj.classType == "Boulder")
-		{
+		if (obj.classType == "Boulder") {
 			std::unique_ptr<Boulder> bldr = std::make_unique<Boulder>
 				(std::make_shared<StudentWorld*>(this), randomX, randomY);
 			actors.push_back(std::move(bldr));
 			clearSquare(randomX, randomY);
 		}
-		else if (obj.classType == "OilBarrel")
-		{
+		else if (obj.classType == "OilBarrel") {
 			std::cout << randomX << " " << randomY << std::endl;
 			std::unique_ptr<OilBarrel> oil = std::make_unique<OilBarrel>
 				(std::make_shared<StudentWorld*>(this), randomX, randomY);
 			actors.push_back(std::move(oil));
 		}
-//		else if (obj.classType == "GoldNugget")
-//			actors.push_back(std::move(std::make_unique<GoldNugget>(std::make_shared<StudentWorld*>(this), randomX, randomY)));
 		obj.numOfObjects--;
 	}
 }
