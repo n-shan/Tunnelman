@@ -44,11 +44,11 @@ int StudentWorld::move() {
 	int num = rand() % G + 1;
 	//if 1/G, add sonar or water
 	if (num == G) {
-		//cout << "1 in G" << endl;
 		num = rand() % 5 + 1;
 		//add sonar
 		if (num == 5) {
 			//add sonar at x = 0, y = 60
+            createSonarKit(0, 60);
 		}
 		//add water
 		else {
@@ -100,13 +100,13 @@ void StudentWorld::createActivatingObject(ActivatedObject obj) {
 			clearSquare(randomX, randomY);
 		}
 		else if (obj.classType == "OilBarrel") {
-			std::cout << randomX << " Oil " << randomY << std::endl;
+			std::cout << "Oil: " << randomX  << " " << randomY << std::endl;
 			std::unique_ptr<OilBarrel> oil = std::make_unique<OilBarrel>
 				(std::make_shared<StudentWorld*>(this), randomX, randomY);
 			actors.push_back(std::move(oil));
 		}
 		else if (obj.classType == "GoldNugget") {
-			std::cout << randomX << " Gold " << randomY << std::endl;
+			std::cout << "Gold: " << randomX << " " << randomY << std::endl;
 			std::unique_ptr<GoldNugget> nugget = std::make_unique<GoldNugget>
 				(std::make_shared<StudentWorld*>(this), randomX, randomY, false, false, true);
 			actors.push_back(std::move(nugget));
@@ -269,13 +269,18 @@ void StudentWorld::createSquirt(int x, int y, Actor::Direction dir) {
 	}
 }
 
-bool StudentWorld::createWaterPool(int x, int y) {
+void StudentWorld::createWaterPool(int x, int y) {
 	if (canCreateAt(x, y)) {
 		std::unique_ptr<WaterPool> waterPool = std::make_unique<WaterPool>(std::make_shared<StudentWorld*>(this), x, y);
 		actors.push_back(std::move(waterPool));
-		return true;
 	}
-	return false;
+}
+
+void StudentWorld::createSonarKit(int x, int y) {
+    if (canCreateAt(x, y)) {
+        std::unique_ptr<SonarKit> sonarKit = std::make_unique<SonarKit>(std::make_shared<StudentWorld*>(this), x, y);
+        actors.push_back(std::move(sonarKit));
+    }
 }
 
 //check if you can create an object at a location
