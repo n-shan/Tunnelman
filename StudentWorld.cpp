@@ -11,17 +11,17 @@ GameWorld* createStudentWorld(string assetDir) {
 
 int StudentWorld::init() {
 	//display Game Stats
-    //setGameStatText(getStatText());
+	//setGameStatText(getStatText());
 	//display earth grid
-    for(int i = 0; i < 60; i++) {
-        for(int j = 0; j < 60; j++) {
-            //create initial tunnel
-            earthGrid[i][j] = make_unique<Earth>(i, j, false);
-            if(i < 30 || i > 33 || j < 4)
-                earthGrid[i][j] = make_unique<Earth>(i, j, true);
-        }
-    }
-  	//display ActivatingObjects
+	for (int i = 0; i < 60; i++) {
+		for (int j = 0; j < 60; j++) {
+			//create initial tunnel
+			earthGrid[i][j] = make_unique<Earth>(i, j, false);
+			if (i < 30 || i > 33 || j < 4)
+				earthGrid[i][j] = make_unique<Earth>(i, j, true);
+		}
+	}
+	//display ActivatingObjects
 	currentLevel = getLevel();
 
 	barrels = min(currentLevel + 2, 21);
@@ -29,58 +29,58 @@ int StudentWorld::init() {
 	createActivatingObject(ActivatedObject(barrels, "OilBarrel"));
 	createActivatingObject(ActivatedObject(std::max(5 - currentLevel / 2, 2), "GoldNugget"));
 
-    //display tunnelman
-    tunnelMan = std::make_unique<Tunnelman>(std::make_shared<StudentWorld*>(this));
-    return GWSTATUS_CONTINUE_GAME;
+	//display tunnelman
+	tunnelMan = std::make_unique<Tunnelman>(std::make_shared<StudentWorld*>(this));
+	return GWSTATUS_CONTINUE_GAME;
 }
 
 int StudentWorld::move() {
-    // This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
-    // Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
+	// This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
+	// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
 	//display Game Stats
 	setGameStatText(getStatText());
-    
-    int G = getLevel() * 25 + 300;
-    int num = rand() % G + 1;
-    //if 1/G, add sonar or water
-    if(num == G) {
-        //cout << "1 in G" << endl;
-        num = rand() % 5 + 1;
-        //add sonar
-        if(num == 5) {
-            //add sonar at x = 0, y = 60
-        }
-        //add water
-        else {
-            int x = rand() % 56;
-            int y = rand() % 56;
-            while(!canCreateAt(x, y)) {
-                x = rand() % 56;
-                y = rand() % 56;
-            }
-            createWaterPool(x, y);
-        }
-    }
-    
-	for(auto it = actors.begin(); it != actors.end(); it++) {
-        if(*it != nullptr)
-            (*it)->doSomething();
-    }
-    tunnelMan->doSomething();
-    dig();
-    removeDeadActors(actors);
+
+	int G = getLevel() * 25 + 300;
+	int num = rand() % G + 1;
+	//if 1/G, add sonar or water
+	if (num == G) {
+		//cout << "1 in G" << endl;
+		num = rand() % 5 + 1;
+		//add sonar
+		if (num == 5) {
+			//add sonar at x = 0, y = 60
+		}
+		//add water
+		else {
+			int x = rand() % 56;
+			int y = rand() % 56;
+			while (!canCreateAt(x, y)) {
+				x = rand() % 56;
+				y = rand() % 56;
+			}
+			createWaterPool(x, y);
+		}
+	}
+
+	for (auto it = actors.begin(); it != actors.end(); it++) {
+		if (*it != nullptr)
+			(*it)->doSomething();
+	}
+	tunnelMan->doSomething();
+	dig();
+	removeDeadActors(actors);
 	if (!tunnelMan->isAlive())
 		return GWSTATUS_PLAYER_DIED;
 	if (getBarrels() == 0)
 		return GWSTATUS_FINISHED_LEVEL;
-    return GWSTATUS_CONTINUE_GAME;
+	return GWSTATUS_CONTINUE_GAME;
 }
 
 void StudentWorld::cleanUp() {
-    for(auto it = actors.begin(); it != actors.end();) {
-        it = actors.erase(it);
-    }
-	if(!tunnelMan->isAlive())
+	for (auto it = actors.begin(); it != actors.end();) {
+		it = actors.erase(it);
+	}
+	if (!tunnelMan->isAlive())
 		decLives();
 	if (getBarrels() == 0)
 	{
@@ -154,49 +154,49 @@ bool StudentWorld::withinRadius(int x, int y, int otherX, int otherY, int radius
 		shiftY = 0;
 		break;
 	}
-	int distance = sqrt(pow(((x + (size / 2) + shiftX) - (otherX + (size / 2))),2) -
-		- pow(((y + (size / 2) + shiftY) - (otherY + (size / 2))), 2));
+	int distance = sqrt(pow(((x + (size / 2) + shiftX) - (otherX + (size / 2))), 2) -
+		-pow(((y + (size / 2) + shiftY) - (otherY + (size / 2))), 2));
 	if (distance <= radius)
 		return true;
 	return false;
 }
 string StudentWorld::checkBounds(int boundX, int boundY, int boundShiftX, int boundShiftY, int X, int Y, GraphObject::Direction d) {
-    int shiftX, shiftY;
+	int shiftX, shiftY;
 	string s = "";
-    switch (d)
-    {	
+	switch (d)
+	{
 	case GraphObject::Direction::none:
-        shiftX = 0;
-        shiftY = 0;
-        break;
-    case GraphObject::Direction::up:
-        shiftX = 0;
-        shiftY = 1;
-        break;
-    case GraphObject::Direction::down:
-        shiftX = 0;
-        shiftY = -1;
-        break;
-    case GraphObject::Direction::left:
-        shiftX = -1;
-        shiftY = 0;
-        break;
-    case GraphObject::Direction::right:
-        shiftX = 1;
-        shiftY = 0;
-        break;
-    default:
-        return s;
-    }
+		shiftX = 0;
+		shiftY = 0;
+		break;
+	case GraphObject::Direction::up:
+		shiftX = 0;
+		shiftY = 1;
+		break;
+	case GraphObject::Direction::down:
+		shiftX = 0;
+		shiftY = -1;
+		break;
+	case GraphObject::Direction::left:
+		shiftX = -1;
+		shiftY = 0;
+		break;
+	case GraphObject::Direction::right:
+		shiftX = 1;
+		shiftY = 0;
+		break;
+	default:
+		return s;
+	}
 	if (((X + shiftX) >= boundX && (X + shiftX) <= (boundShiftX + boundX))
 		|| ((Y + shiftY) >= boundY && (Y + shiftY) <= (boundShiftY + boundY)))
 		s = "partial";
 	else if (((X + shiftX) >= boundX && (X + shiftX) <= (boundShiftX + boundX))
-        && ((Y + shiftY) >= boundY && (Y + shiftY) <= (boundShiftY + boundY)))
-        s = "inside";
+		&& ((Y + shiftY) >= boundY && (Y + shiftY) <= (boundShiftY + boundY)))
+		s = "inside";
 	else
-        s = "outside";
-    return s;
+		s = "outside";
+	return s;
 }
 
 std::string StudentWorld::getStatText() {
@@ -212,19 +212,19 @@ std::string StudentWorld::getStatText() {
 	return s;
 }
 void StudentWorld::dig() {
-    //dig depending on the direction
-    if(tunnelMan->getDirection() == Actor::Direction::right) {
-        clearEarth(tunnelMan->getX() + 3, tunnelMan->getY(), tunnelMan->getY(), true);
-    }
-    else if(tunnelMan->getDirection() == Actor::Direction::left) {
-        clearEarth(tunnelMan->getX(), tunnelMan->getY(), tunnelMan->getY(), true);
-    }
-    else if(tunnelMan->getDirection() == Actor::Direction::up) {
-        clearEarth(tunnelMan->getY() + 3, tunnelMan->getX(), tunnelMan->getY(), false);
-    }
-    else if(tunnelMan->getDirection() == Actor::Direction::down) {
-        clearEarth(tunnelMan->getY(), tunnelMan->getX(), tunnelMan->getY(), false);
-    }
+	//dig depending on the direction
+	if (tunnelMan->getDirection() == Actor::Direction::right) {
+		clearEarth(tunnelMan->getX() + 3, tunnelMan->getY(), tunnelMan->getY(), true);
+	}
+	else if (tunnelMan->getDirection() == Actor::Direction::left) {
+		clearEarth(tunnelMan->getX(), tunnelMan->getY(), tunnelMan->getY(), true);
+	}
+	else if (tunnelMan->getDirection() == Actor::Direction::up) {
+		clearEarth(tunnelMan->getY() + 3, tunnelMan->getX(), tunnelMan->getY(), false);
+	}
+	else if (tunnelMan->getDirection() == Actor::Direction::down) {
+		clearEarth(tunnelMan->getY(), tunnelMan->getX(), tunnelMan->getY(), false);
+	}
 }
 void StudentWorld::clearSquare(int x, int y)
 {
@@ -235,82 +235,82 @@ void StudentWorld::clearSquare(int x, int y)
 	}
 }
 void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool isHoriz) {
-    //if tunnelman is at the top of the field
-    if(yLevel >= 60)
-        return;
-    //prevent tunnelman from digging up above y = 56
-    if(yLevel > 56 && tunnelMan->getDirection() == Actor::Direction::up)
-        return;
-    int clearAmount = 4;
-    //if tunnelman is near the top of the field and is horizontal
-    if(yLevel > 56 && isHoriz) {
-        //change amount that is cleared
-        clearAmount = 60 - tunnelMan->getY();
-    }
-    //clear the earth
+	//if tunnelman is at the top of the field
+	if (yLevel >= 60)
+		return;
+	//prevent tunnelman from digging up above y = 56
+	if (yLevel > 56 && tunnelMan->getDirection() == Actor::Direction::up)
+		return;
+	int clearAmount = 4;
+	//if tunnelman is near the top of the field and is horizontal
+	if (yLevel > 56 && isHoriz) {
+		//change amount that is cleared
+		clearAmount = 60 - tunnelMan->getY();
+	}
+	//clear the earth
 	playSound(SOUND_DIG);
-    for(int i = botOfLevel; i < botOfLevel + clearAmount ; i++) {
-        if(isHoriz) {
-            if(earthGrid[constLevel][i]->isVisible())
-                earthGrid[constLevel][i]->setVisible(false);
-        }
-        else {
-            if(earthGrid[i][constLevel]->isVisible())
-                earthGrid[i][constLevel]->setVisible(false);
-        }
-    }
+	for (int i = botOfLevel; i < botOfLevel + clearAmount; i++) {
+		if (isHoriz) {
+			if (earthGrid[constLevel][i]->isVisible())
+				earthGrid[constLevel][i]->setVisible(false);
+		}
+		else {
+			if (earthGrid[i][constLevel]->isVisible())
+				earthGrid[i][constLevel]->setVisible(false);
+		}
+	}
 }
 
 void StudentWorld::createSquirt(int x, int y, Actor::Direction dir) {
-    if(canCreateAt(x, y)) {
-        std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(std::make_shared<StudentWorld*>(this), x, y, dir);
-        squirt->setVisible(true);
-        actors.push_back(std::move(squirt));
-    }
+	if (canCreateAt(x, y)) {
+		std::unique_ptr<Squirt> squirt = std::make_unique<Squirt>(std::make_shared<StudentWorld*>(this), x, y, dir);
+		squirt->setVisible(true);
+		actors.push_back(std::move(squirt));
+	}
 }
 
 bool StudentWorld::createWaterPool(int x, int y) {
-    if(canCreateAt(x, y)) {
-        std::unique_ptr<WaterPool> waterPool = std::make_unique<WaterPool>(std::make_shared<StudentWorld*>(this), x, y);
-        actors.push_back(std::move(waterPool));
-        return true;
-    }
-    return false;
+	if (canCreateAt(x, y)) {
+		std::unique_ptr<WaterPool> waterPool = std::make_unique<WaterPool>(std::make_shared<StudentWorld*>(this), x, y);
+		actors.push_back(std::move(waterPool));
+		return true;
+	}
+	return false;
 }
 
 //check if you can create an object at a location
 bool StudentWorld::canCreateAt(int x, int y) {
-    //if outside the grid
-    if(x > 56 || x < 0 || y > 60 || y < 0)
-        return false;
-    for(int i = 0; i < 4; i++) {
-        for(int j = 0; j < 4; j++) {
-            if(x + i >= 60 || y + j >= 60)
-                continue;
-            if(earthGrid[x + i][y + j]->isVisible())
-                return false;
-        }
-    }
-    return true;
+	//if outside the grid
+	if (x > 56 || x < 0 || y > 60 || y < 0)
+		return false;
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (x + i >= 60 || y + j >= 60)
+				continue;
+			if (earthGrid[x + i][y + j]->isVisible())
+				return false;
+		}
+	}
+	return true;
 }
 
 bool StudentWorld::canMoveTo(int x, int y) {
-    //if outside the grid
-    if(x > 60 || x < 0 || y > 63 || y < 0 )
-        return false;
-    //if above grid b/w x=0,x=60
-    else if((x <= 56 || x > -1) && y >= 60)
-        return true;
-    //if within the grid
-    else
-        return !earthGrid[x][y]->isVisible();
+	//if outside the grid
+	if (x > 60 || x < 0 || y > 63 || y < 0)
+		return false;
+	//if above grid b/w x=0,x=60
+	else if ((x <= 56 || x > -1) && y >= 60)
+		return true;
+	//if within the grid
+	else
+		return !earthGrid[x][y]->isVisible();
 }
 void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>>& actors) {
-    for(auto it = actors.begin(); it != actors.end();) {
-        if(!(*it)->isAlive()) {
-            it = actors.erase(it);
-        }
-        else
-            it++;
-    }
+	for (auto it = actors.begin(); it != actors.end();) {
+		if (!(*it)->isAlive()) {
+			it = actors.erase(it);
+		}
+		else
+			it++;
+	}
 }
