@@ -21,23 +21,13 @@ int StudentWorld::init() {
                 earthGrid[i][j] = make_unique<Earth>(i, j, true);
         }
     }
-  	//display boulders
+  	//display ActivatingObjects
 	currentLevel = getLevel();
-	int B = min(currentLevel / 2 + 2, 9);
-	while (B) {
-		int randomX = 30;
-		int randomY = 4;
-		findOpenPos(randomX, randomY);
-		actors.push_back(make_unique<Boulder>(std::make_shared<StudentWorld*>(this),randomX, randomY));
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				earthGrid[randomX + i][randomY + j]->setVisible(false);
-			}
-		}
-		B--;
-	}
-    //display tunnelman
-    //tunnelMan.reset(new Tunnelman(this));
+	barrels = min(currentLevel + 2, 21);
+	createActivatingObject(ActivatedObject(min(currentLevel / 2 + 2, 9), "Boulder"));
+	createActivatingObject(ActivatedObject(barrels, "OilBarrel"));
+	//createActivatingObject(ActivatedObject(min(currentLevel + 2, 21), "GoldNugget"));
+	//display tunnelman
     tunnelMan = std::make_unique<Tunnelman>(std::make_shared<StudentWorld*>(this));
     return GWSTATUS_CONTINUE_GAME;
 }
@@ -57,7 +47,7 @@ int StudentWorld::move() {
     removeDeadActors(actors);
 	if (!tunnelMan->isAlive())
 		return GWSTATUS_PLAYER_DIED;
-	if (false) // if (getBarrels() == 0)
+	if (getBarrels() == 0)
 		return GWSTATUS_FINISHED_LEVEL;
     return GWSTATUS_CONTINUE_GAME;
 }
@@ -66,9 +56,39 @@ void StudentWorld::cleanUp() {
     for(auto it = actors.begin(); it != actors.end();) {
         it = actors.erase(it);
     }
-    decLives();
+	if(!tunnelMan->isAlive())
+		decLives();
+	if (getBarrels() == 0)
+	{
+		//Increases level in gameController 
+	}
 }
 
+void StudentWorld::createActivatingObject(ActivatedObject obj)
+{
+	while (obj.numOfObjects) {
+		int randomX = 0;
+		int randomY = 0;
+		findOpenPos(randomX, randomY);
+		if (obj.classType == "Boulder")
+		{
+			std::unique_ptr<Boulder> bldr = std::make_unique<Boulder>
+				(std::make_shared<StudentWorld*>(this), randomX, randomY);
+			actors.push_back(std::move(bldr));
+			clearSquare(randomX, randomY);
+		}
+		else if (obj.classType == "OilBarrel")
+		{
+			std::cout << randomX << " " << randomY << std::endl;
+			std::unique_ptr<OilBarrel> oil = std::make_unique<OilBarrel>
+				(std::make_shared<StudentWorld*>(this), randomX, randomY);
+			actors.push_back(std::move(oil));
+		}
+//		else if (obj.classType == "GoldNugget")
+//			actors.push_back(std::move(std::make_unique<GoldNugget>(std::make_shared<StudentWorld*>(this), randomX, randomY)));
+		obj.numOfObjects--;
+	}
+}
 void StudentWorld::findOpenPos(int & x, int & y) {
 	x = rand() % 56;
 	y = rand() % 56;
@@ -156,13 +176,14 @@ string StudentWorld::checkBounds(int boundX, int boundY, int boundShiftX, int bo
 
 std::string StudentWorld::getStatText() {
 	string s = "Scr:\t " + to_string(getScore())
-		+ " Lvl:\t " + to_string(getLevel()) 
-		+ " Lives: \t " + to_string(getLives())
-		+ " Hlth: \t " + to_string(tunnelMan->getHitPoints())
-		+ " Wtr: \t " + to_string(tunnelMan->getWater())
+		+ " Lvl:\t " + to_string(getLevel())
+		+ " Lives: \t " + to_string(getLives());
+	s += " Hlth: \t " + to_string(tunnelMan->getHitPoints());
+	s += "0%";
+	s += " Wtr: \t " + to_string(tunnelMan->getWater())
 		+ " Gld: \t " + to_string(tunnelMan->getGold())
 		+ " Sonar: \t " + to_string(tunnelMan->getSonar())
-		+ " Oil left:\t 0";
+		+ " Oil left:\t " + to_string(getBarrels());
 	return s;
 }
 void StudentWorld::dig() {
@@ -180,7 +201,14 @@ void StudentWorld::dig() {
         clearEarth(tunnelMan->getY(), tunnelMan->getX(), tunnelMan->getY(), false);
     }
 }
-
+void StudentWorld::clearSquare(int x, int y)
+{
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			earthGrid[x + i][y + j]->setVisible(false);
+		}
+	}
+}
 void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool isHoriz) {
     //if tunnelman is at the top of the field
     if(yLevel >= 60)
@@ -243,7 +271,6 @@ bool StudentWorld::canMoveTo(int x, int y) {
     else
         return !earthGrid[x][y]->isVisible();
 }
-
 void StudentWorld::removeDeadActors(std::vector<std::unique_ptr<Actor>>& actors) {
     for(auto it = actors.begin(); it != actors.end();) {
         if(!(*it)->isAlive()) {

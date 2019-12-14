@@ -7,150 +7,152 @@
 
 //agent functions
 bool Agent::canPickThingsUp() const {
-    return false;
+	return false;
 }
 
 bool Agent::annoy(int amt) {
-    return false;
+	return false;
 }
 
 //tunnelman functions
 bool Tunnelman::TunnelManInteracts(Direction d) {
 	//checks if boulder is in the way
-	for (auto i = (*getWorld())->getActors().begin(); i !=(*getWorld())->getActors().end(); i++) {
-		if ((*i)->getID() == TID_BOULDER)
-			if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, d))
-				return false;
+	for (auto i = (*getWorld())->getActors().begin(); i != (*getWorld())->getActors().end(); i++) {
+		{
+			if ((*i)->getID() == TID_BOULDER)
+				if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, d))
+					return false;
+		}
 	}
 	return true;
 }
 void Tunnelman::doSomething() {
-    if(getHitPoints() == 0) {
+	if (getHitPoints() == 0) {
 		if (isAlive())
 			setDead();
-        return;
+		return;
 	}
-    int ch;
-    if ((*getWorld())->getKey(ch) == true) {
-        // user hit a key this tick!
-        //update location and remove earth while checking bounds
-        bool canMove = true;
-        switch (ch) {
-            case KEY_PRESS_LEFT:
-                //move player to the left
-                if (getDirection() == left) {
-				            canMove = TunnelManInteracts(left);
-                    if(getX() > 0 && canMove)
-                        moveTo(getX() - 1, getY());
-                    else
-                        moveTo(getX(), getY());
-                }
-                else
-                    setDirection(left);
-                break;
-            case KEY_PRESS_RIGHT:
-                //move player to the right
-                if(getDirection() == right) {
-                    canMove = TunnelManInteracts(right);
-				            if (getX() < 56 && canMove)
-                        moveTo(getX() + 1, getY());
-                    else
-                        moveTo(getX(), getY());
-                }
-                else
-                    setDirection(right);
-                break;
-            case KEY_PRESS_UP:
-                //move player up
-                if(getDirection() == up) {
-                    canMove = TunnelManInteracts(up);
-				            if (getY() < 60 && canMove)
-                        moveTo(getX(), getY() + 1);
-                    else
-                        moveTo(getX(), getY());
-                }
-                else
-                    setDirection(up);
-                break;
-            case KEY_PRESS_DOWN:
-                //move player down
-                if(getDirection() == down) {
-                    canMove = TunnelManInteracts(down);
-				            if (getY() > 0 && canMove)
-                        moveTo(getX(), getY() - 1);
-                    else
-                        moveTo(getX(), getY());
-                }
-                else
-                    setDirection(down);
-                break;
-            case KEY_PRESS_SPACE:
-                //add a Squirt in front of the player
-				if (getWater() > 0) {
-					(*getWorld())->playSound(SOUND_PLAYER_SQUIRT);
-					if (getDirection() == right) {
-						(*getWorld())->createSquirt(getX() + 4, getY(), getDirection());
-					}
-					else if (getDirection() == left) {
-						(*getWorld())->createSquirt(getX() - 4, getY(), getDirection());
-					}
-					else if (getDirection() == up) {
-						(*getWorld())->createSquirt(getX(), getY() + 4, getDirection());
-					}
-					else if (getDirection() == down) {
-						(*getWorld())->createSquirt(getX(), getY() - 4, getDirection());
-					}
-					addWater(-1);
+	int ch;
+	if ((*getWorld())->getKey(ch) == true) {
+		// user hit a key this tick!
+		//update location and remove earth while checking bounds
+		bool canMove = true;
+		switch (ch) {
+		case KEY_PRESS_LEFT:
+			//move player to the left
+			if (getDirection() == left) {
+				canMove = TunnelManInteracts(left);
+				if (getX() > 0 && canMove)
+					moveTo(getX() - 1, getY());
+				else
+					moveTo(getX(), getY());
+			}
+			else
+				setDirection(left);
+			break;
+		case KEY_PRESS_RIGHT:
+			//move player to the right
+			if (getDirection() == right) {
+				canMove = TunnelManInteracts(right);
+				if (getX() < 56 && canMove)
+					moveTo(getX() + 1, getY());
+				else
+					moveTo(getX(), getY());
+			}
+			else
+				setDirection(right);
+			break;
+		case KEY_PRESS_UP:
+			//move player up
+			if (getDirection() == up) {
+				canMove = TunnelManInteracts(up);
+				if (getY() < 60 && canMove)
+					moveTo(getX(), getY() + 1);
+				else
+					moveTo(getX(), getY());
+			}
+			else
+				setDirection(up);
+			break;
+		case KEY_PRESS_DOWN:
+			//move player down
+			if (getDirection() == down) {
+				canMove = TunnelManInteracts(down);
+				if (getY() > 0 && canMove)
+					moveTo(getX(), getY() - 1);
+				else
+					moveTo(getX(), getY());
+			}
+			else
+				setDirection(down);
+			break;
+		case KEY_PRESS_SPACE:
+			//add a Squirt in front of the player
+			if (getWater() > 0) {
+				(*getWorld())->playSound(SOUND_PLAYER_SQUIRT);
+				if (getDirection() == right) {
+					(*getWorld())->createSquirt(getX() + 4, getY(), getDirection());
 				}
-                break;                
-			case KEY_PRESS_ESCAPE:
-				setDead();
-				break;
-        }
+				else if (getDirection() == left) {
+					(*getWorld())->createSquirt(getX() - 4, getY(), getDirection());
+				}
+				else if (getDirection() == up) {
+					(*getWorld())->createSquirt(getX(), getY() + 4, getDirection());
+				}
+				else if (getDirection() == down) {
+					(*getWorld())->createSquirt(getX(), getY() - 4, getDirection());
+				}
+				addWater(-1);
+			}
+			break;
+		case KEY_PRESS_ESCAPE:
+			setDead();
+			break;
+		}
 
 	}
 }
 
 //TODO
 bool Tunnelman::annoy(int amt) {
-    return false;
+	return false;
 }
 
 //TODO
 void Tunnelman::addGold() {
-    
+
 }
 
 //Squirt functions
 void Squirt::doSomething() {
-    //TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
-    //if the squirt can travel
-    if(disTraveled < 4) {
-        if(getDirection() == right && (*getWorld())->canMoveTo(getX() + 4, getY())) {
-            moveTo(getX() + 1, getY());
-        }
-        else if(getDirection() == left && (*getWorld())->canMoveTo(getX() - 1, getY())) {
-            moveTo(getX() - 1, getY());
-        }
-        else if(getDirection() == up && (*getWorld())->canMoveTo(getX(), getY() + 4)) {
-            moveTo(getX(), getY() + 1);
-        }
-        else if(getDirection() == down && (*getWorld())->canMoveTo(getX(), getY() - 1)) {
-            moveTo(getX(), getY() - 1);
-        }
-        //if the squirt cannot move
-        else {
-            setVisible(false);
-            setDead();
-            return;
-        }
-        disTraveled++;
-    }
-    //if the squirt has traveled the max distance
-    else {
-        setVisible(false);
-        setDead();
-    }
+	//TODO : DAMAGE PROTESTORS, CHECK FOR BOULDERS
+	//if the squirt can travel
+	if (disTraveled < 4) {
+		if (getDirection() == right && (*getWorld())->canMoveTo(getX() + 4, getY())) {
+			moveTo(getX() + 1, getY());
+		}
+		else if (getDirection() == left && (*getWorld())->canMoveTo(getX() - 1, getY())) {
+			moveTo(getX() - 1, getY());
+		}
+		else if (getDirection() == up && (*getWorld())->canMoveTo(getX(), getY() + 4)) {
+			moveTo(getX(), getY() + 1);
+		}
+		else if (getDirection() == down && (*getWorld())->canMoveTo(getX(), getY() - 1)) {
+			moveTo(getX(), getY() - 1);
+		}
+		//if the squirt cannot move
+		else {
+			setVisible(false);
+			setDead();
+			return;
+		}
+		disTraveled++;
+	}
+	//if the squirt has traveled the max distance
+	else {
+		setVisible(false);
+		setDead();
+	}
 }
 
 //Boulder functions
@@ -163,11 +165,11 @@ bool Boulder::shouldBoulderFall(int x, int y) {
 		if (!(*getWorld())->getEarthGridPoint(getX() + i, getY() - 1)->isVisible())
 			count++;
 	}
-	for (auto i =(*getWorld())->getActors().begin(); i <(*getWorld())->getActors().end(); i++) {
+	for (auto i = (*getWorld())->getActors().begin(); i < (*getWorld())->getActors().end(); i++) {
 		if ((*i)->getID() == TID_BOULDER && !((*i)->getX() == getX() && (*i)->getY() == getY())) {
-			std::string check =(*getWorld())->checkBounds(
+			std::string check = (*getWorld())->checkBounds(
 				(*i)->getX(), (*i)->getY(), 4, 4, getX(), getY(), Direction::down);
-			if(!(check == "outside"))
+			if (!(check == "outside"))
 				b = false;
 		}
 	}
@@ -176,13 +178,13 @@ bool Boulder::shouldBoulderFall(int x, int y) {
 	return b;
 }
 void Boulder::doSomething() {
-	if (alive) {
+	if (isAlive()) {
 		bool shouldFall = shouldBoulderFall(getX(), getY());
 		if (stable) {
 			if (shouldFall) {
-                //if waiting is over, start to fall
+				//if waiting is over, start to fall
 				if (!waiting) {
-					//TODO: play sound 
+					(*getWorld())->playSound(SOUND_FALLING_ROCK);
 					stable = false;
 				}
 				waiting -= 1;
@@ -190,10 +192,10 @@ void Boulder::doSomething() {
 		}
 		else {
 			if (shouldFall) {
-                //if it can keep falling
+				//if it can keep falling
 				if (shouldBoulderFall(getX(), getY())) {
 					//check if protesters are going to be hit
-					for (auto i =(*getWorld())->getActors().begin(); i !=(*getWorld())->getActors().end(); i++)
+					for (auto i = (*getWorld())->getActors().begin(); i != (*getWorld())->getActors().end(); i++)
 					{
 						if ((*i)->getID() == TID_PROTESTER || (*i)->getID() == TID_HARD_CORE_PROTESTER) {
 							if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, down)) {
@@ -203,18 +205,41 @@ void Boulder::doSomething() {
 						}
 					}
 					//check if player is going to be hit
-					if ((*getWorld())->withinRadius(getX(), getY(),(*getWorld())->getTunnelMan()->getX(),(*getWorld())->getTunnelMan()->getY(), 3, 4, down)) {
+					if ((*getWorld())->withinRadius(getX(), getY(), (*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), 3, 4, down)) {
 						//kill player
 						std::cout << "Tman hit" << std::endl;
 					}
 					moveTo(getX(), getY() - 1);
 				}
-                //if it hits ground
-				if(shouldFall && !shouldBoulderFall(getX(),getY())) {
-					alive = false;
-					setVisible(false);
+				//if it hits ground
+				if (shouldFall && !shouldBoulderFall(getX(), getY())) {
+					setDead();
 				}
 			}
+		}
+	}
+}
+//OilBarrel functions
+void OilBarrel::doSomething()
+{
+	if (isAlive())
+	{
+		if ((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(),
+			(*getWorld())->getTunnelMan()->getY(), getX(), getY(), 4, 4, (*getWorld())->getTunnelMan()->getDirection()))
+		{
+			setVisible(true);
+			if ((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(),
+				(*getWorld())->getTunnelMan()->getY(), getX(), getY(), 3, 4, (*getWorld())->getTunnelMan()->getDirection()))
+			{
+				(*getWorld())->increaseScore(1000);
+				(*getWorld())->playSound(SOUND_FOUND_OIL);
+				(*getWorld())->addBarrel(-1);
+				setDead();
+			}
+		}
+		else
+		{
+			setVisible(false);
 		}
 	}
 }
