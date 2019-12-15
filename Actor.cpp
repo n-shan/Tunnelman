@@ -337,24 +337,35 @@ void RegularProtester::doSomething()
 				shoutTimer = 15;
 			}
 			else
-			{ 
-				//check if protester can phase through wall (withinRadius 4,
+			{
+				//check if protester can phase through wall
+				dir = none;
+				if ((*getWorld())->withinRadius(getX(), getY(),
+					(*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), 4, 4, none)
+					&& correctDirection(dir))
+				{
+					setDirection(dir);
+
+				}
+
+
 			}
 			//chooseNextPath();
 			//last line should be
 			currentTicksToWait = calculatedTicksToWait; //reset ticks to wait for
 		}
 		currentTicksToWait--;
-		if(shoutTimer)
+		if (shoutTimer)
 			shoutTimer--;
 	}
 	else
 	{
-		path = getPath(getX(), getY(), 60, 60);
-		if (!path.empty())
-			followPath(path);
-		else //means that there is no more path follow because they are at the destination
-			setDead();
+		//		path = getPath(getX(), getY(), 60, 60);
+		//		if (!path.empty())
+		//			followPath(path);
+		//		else //means that there is no more path follow because they are at the destination
+		setDead();
+		//			(*getWorld())->increaseScore(100);
 	}
 }
 //Hardcore Protester functions
@@ -401,7 +412,7 @@ void HardCoreProtester::doSomething()
 //		p.clear(); return p;
 //
 //}
-bool Protester::correctDirection(GraphObject::Direction &d)
+bool Protester::correctDirection(GraphObject::Direction& d)
 {
 	//check if Tman is in the direction protester is facing
 	//check if there is any earth or boulders in the way
@@ -417,7 +428,8 @@ bool Protester::correctDirection(GraphObject::Direction &d)
 				{
 					if ((*it)->getX() < getX()
 						&& (*it)->getY() >= getY()
-						&& (*it)->getY() < getY() + 4)
+						&& (*it)->getY() < getY() + 4
+						)
 					{
 						return false;
 					}
@@ -563,9 +575,21 @@ bool Protester::correctDirection(GraphObject::Direction &d)
 	}
 	if (d == none)
 	{
+		Direction d1 = left;
+		Direction d2 = right;
+		Direction d3 = up;
+		Direction d4 = down;
+
 		//check all directions within 4 squares
 		//then change d to be the direction where tman is
-
+		if (correctDirection(d1))
+			d = d1;
+		if (correctDirection(d2))
+			d = d2;
+		if (correctDirection(d3))
+			d = d3;
+		if (correctDirection(d4))
+			d = d4;
 	}
 	return false;
 }

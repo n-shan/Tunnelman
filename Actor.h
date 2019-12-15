@@ -109,7 +109,7 @@ public:
 	//TODO :
 	virtual void addGold(int amt) { gold += amt; }
 	// Pick up a sonar kit.
-    void addSonar(int amt) { sonar += amt; }
+	void addSonar(int amt) { sonar += amt; }
 	// Pick up water.
 	void addWater(int w) { water += w; }
 	// Get amount of gold
@@ -126,31 +126,25 @@ private:
 
 class Protester : public Agent {
 public:
-	Protester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int HP)
-		: Agent(studentWorld, imageID, 60, 60, left, HP) { }
+	Protester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, int HP)
+		: Agent(studentWorld, imageID, startX, startY, left, HP) { }
 
 	virtual ~Protester() { }
 
 	virtual bool annoy(int amount);
-
+	bool correctDirection(GraphObject::Direction&);
 	virtual void doSomething();
 	virtual void addGold();
-	bool correctDirection(Direction &);
-	std::vector<std::pair<GraphObject::Direction,std::pair<int,int>>> 
-		getPath(int x,int y, int destinationX, int distinationY);
-	void followPath(std::vector<std::pair<GraphObject::Direction, std::pair<int, int>>> p);
-//	virtual void decideMove(); //8<x<60 squares before changing direction
-	//int ticksToWaitBetweenMoves = max(0, 3 – current_level_number/4);
 protected:
-	int calculatedTicksToWait = std::max(0,3 - getLevel()/4), currentTicksToWait = calculatedTicksToWait, shoutTimer = 15;
-	std::vector<std::pair<GraphObject::Direction, std::pair<int, int>>> path;
+	int calculatedTicksToWait = std::max(0, 3 - getLevel() / 4), currentTicksToWait = calculatedTicksToWait, shoutTimer = 15;
+
 private:
 };
 
 class RegularProtester : public Protester {
 public:
-	RegularProtester(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
-		: Protester(studentWorld, TID_PROTESTER, 5) { }
+	RegularProtester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY)
+		: Protester(studentWorld, imageID, startX, startY, 5) { }
 
 	virtual ~RegularProtester() { }
 
@@ -162,8 +156,8 @@ private:
 
 class HardCoreProtester : public Protester {
 public:
-	HardCoreProtester(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
-		: Protester(studentWorld, TID_HARD_CORE_PROTESTER, 20) { }
+	HardCoreProtester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY)
+		: Protester(studentWorld, imageID, startX, startY, 20) { }
 
 	virtual ~HardCoreProtester() { }
 
@@ -192,7 +186,7 @@ class OilBarrel : public ActivatingObject {
 public:
 	OilBarrel(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
 		: ActivatingObject(studentWorld, TID_BARREL, x, y, right, 1.0, 2, false) {
-            setVisible(false);
+		setVisible(false);
 	}
 	virtual ~OilBarrel() { }
 	virtual void doSomething();
@@ -224,14 +218,14 @@ class SonarKit : public ActivatingObject {
 public:
 	SonarKit(std::shared_ptr<StudentWorld*> studentWorld, int x, int y)
 		: ActivatingObject(studentWorld, TID_SONAR, x, y, right, 1.0, 2, true) {
-            setVisible(true);
-            tOnField = std::max(100, 300 - 10 * getLevel());
+		setVisible(true);
+		tOnField = std::max(100, 300 - 10 * getLevel());
 	}
 
 	virtual ~SonarKit() { }
 	virtual void doSomething();
 private:
-    int tOnField;
+	int tOnField;
 };
 
 class WaterPool : public ActivatingObject {
@@ -249,4 +243,3 @@ private:
 };
 
 #endif // ACTOR_H_
-
