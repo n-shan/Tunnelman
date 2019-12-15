@@ -1,5 +1,6 @@
 #include "Actor.h"
 #include "StudentWorld.h"
+#include <queue>
 
 //actor funtions
 int Actor::getLevel() {
@@ -114,8 +115,8 @@ void Tunnelman::doSomething() {
 		case KEY_PRESS_TAB:
 			if (getGold() > 0) {
 				addGold(-1);
-				(*getWorld())->getActors().push_back(std::move(std::make_unique<GoldNugget>
-					(std::make_shared<StudentWorld*>(*getWorld()), getX(), getY(), true, true, false)));
+				(*getWorld())->getActors().push_back(std::make_unique<GoldNugget>
+                                                     (std::make_shared<StudentWorld*>(*getWorld()), getX(), getY(), true, true, false));
 			}
 			break;
 		case KEY_PRESS_ESCAPE:
@@ -165,7 +166,6 @@ void Squirt::doSomething() {
 		}
 		//if the squirt cannot move
 		else {
-			setVisible(false);
 			setDead();
 			return;
 		}
@@ -173,7 +173,6 @@ void Squirt::doSomething() {
 	}
 	//if the squirt has traveled the max distance
 	else {
-		setVisible(false);
 		setDead();
 	}
 }
@@ -445,6 +444,29 @@ void RegularProtester::doSomething()
 	}
 	else
 	{
+	//#3
+		if (getX() == 60 && getY() == 60) {
+			setDead();
+		}
+		else {
+			updateGrid();
+			//move one step closer to exit
+			//IMPLEMENT FINDDIRECTIONOUT FUNCTION
+			setDirection(findDirectionOut());
+			if (getDirection() == right)
+				moveTo(getX() + 1, getY());
+
+			if (getDirection() == left)
+				moveTo(getX() - 1, getY());
+
+			if (getDirection() == up)
+				moveTo(getX(), getY() + 1);
+
+			if (getDirection() == down)
+				moveTo(getX(), getY() - 1);
+
+			return;
+		}
 		//		path = getPath(getX(), getY(), 60, 60);
 		//		if (!path.empty())
 		//			followPath(path);
@@ -453,10 +475,28 @@ void RegularProtester::doSomething()
 		//			(*getWorld())->increaseScore(100);
 	}
 }
+void Protester::updateGrid() {
+    for(int i = 0; i < 60; i++) {
+        for(int j = 0; j < 60; j++) {
+            if((*getWorld())->canCreateAt(i, j)) {
+                canMoveGrid[i][j] = true;
+            }
+            else
+                canMoveGrid[i][j] = false;
+        }
+    }
+}
+
+//IMPLEMENT THIS
+Actor::Direction Protester::findDirectionOut() {
+    //std::queue<>
+    return right;
+}
+
 //Hardcore Protester functions
 void HardCoreProtester::doSomething()
 {
-	if (getHitPoints() > 0)
+	if (getHitPoints() != 0)
 	{
 		if (currentTicksToWait == 0) //when the ticks to wait is 0
 		{
@@ -467,7 +507,8 @@ void HardCoreProtester::doSomething()
 				//If there is a new, better path, join the thread by returning the 
 				//promise to a future and set path = future;
 //				path = getPath(getX(), getY(),
-	//				(*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY());
+
+//					(*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY());
 //				followPath(path);
 			}
 			else

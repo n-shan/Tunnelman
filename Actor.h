@@ -138,14 +138,17 @@ public:
 	virtual void addGold();
 	void findRandomDirection(int & randomDirection);
 	int calculateNumSquaresToMoveInCurrentDirection (int min, int max) { return rand() % (max - min + 1) + min; };
+    //updates canMoveGrid
+    void updateGrid();
+    //finds direction to get out of grid
+    Direction findDirectionOut();
 protected:
 	const int calculatedTicksToWait = std::max(0, 3 - getLevel() / 4);
 	int	currentTicksToWait = calculatedTicksToWait, 
 		shoutTimer = 15,
 		numSquaresToMoveInCurrentDirection = 0,
 		perpendicularTickCounter = 200;
-
-private:
+    bool canMoveGrid[60][60];
 };
 
 class RegularProtester : public Protester {
@@ -248,5 +251,4 @@ public:
 private:
 	int tOnField;
 };
-
 #endif // ACTOR_H_
