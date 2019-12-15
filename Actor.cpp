@@ -224,12 +224,14 @@ void Boulder::doSomething() {
 						if ((*i)->getID() == TID_PROTESTER || (*i)->getID() == TID_HARD_CORE_PROTESTER) {
 							if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, down)) {
 								(*i)->annoy(100);
+								(*getWorld())->increaseScore(500);
 							}
 						}
 					}
 					//check if player is going to be hit
 					if ((*getWorld())->withinRadius(getX(), getY(), (*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), 3, 4, down)) {
 						(*getWorld())->getTunnelMan()->annoy(100);
+
 					}
 					moveTo(getX(), getY() - 1);
 				}
@@ -507,6 +509,7 @@ bool Protester::annoy(int amt) {
 		else
 		{
 			(*getWorld())->playSound(SOUND_PROTESTER_GIVE_UP);
+			currentTicksToWait = 0;
 		}
 
 		return true;
