@@ -126,8 +126,8 @@ private:
 
 class Protester : public Agent {
 public:
-	Protester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, int HP)
-		: Agent(studentWorld, imageID, startX, startY, left, HP) { }
+	Protester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int HP)
+		: Agent(studentWorld, imageID, 60, 60, left, HP) { }
 
 	virtual ~Protester() { }
 
@@ -135,14 +135,22 @@ public:
 
 	virtual void doSomething();
 	virtual void addGold();
+	bool correctDirection(Direction &);
+	std::vector<std::pair<GraphObject::Direction,std::pair<int,int>>> 
+		getPath(int x,int y, int destinationX, int distinationY);
+	void followPath(std::vector<std::pair<GraphObject::Direction, std::pair<int, int>>> p);
+//	virtual void decideMove(); //8<x<60 squares before changing direction
+	//int ticksToWaitBetweenMoves = max(0, 3 – current_level_number/4);
+protected:
+	int calculatedTicksToWait = std::max(0,3 - getLevel()/4), currentTicksToWait = calculatedTicksToWait, shoutTimer = 15;
+	std::vector<std::pair<GraphObject::Direction, std::pair<int, int>>> path;
 private:
-
 };
 
 class RegularProtester : public Protester {
 public:
-	RegularProtester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY)
-		: Protester(studentWorld, imageID, startX, startY, 5) { }
+	RegularProtester(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
+		: Protester(studentWorld, TID_PROTESTER, 5) { }
 
 	virtual ~RegularProtester() { }
 
@@ -154,8 +162,8 @@ private:
 
 class HardCoreProtester : public Protester {
 public:
-	HardCoreProtester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY)
-		: Protester(studentWorld, imageID, startX, startY, 20) { }
+	HardCoreProtester(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
+		: Protester(studentWorld, TID_HARD_CORE_PROTESTER, 20) { }
 
 	virtual ~HardCoreProtester() { }
 
