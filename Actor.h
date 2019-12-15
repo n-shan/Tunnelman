@@ -89,8 +89,9 @@ public:
 
 	int getHitPoints() const { return hitPoints; }
 
+	bool noBoulderInFrontOfAgent(Direction d);
 	virtual bool canPickThingsUp() const; //TODO
-private:
+protected:
 	int hitPoints;
 };
 
@@ -102,7 +103,7 @@ public:
 	}
 
 	virtual ~Tunnelman() { }
-	bool TunnelManInteracts(Direction d);
+	
 	virtual void doSomething();
 	virtual bool annoy(int amt); //TODO
 
@@ -130,13 +131,19 @@ public:
 		: Agent(studentWorld, imageID, startX, startY, left, HP) { }
 
 	virtual ~Protester() { }
-
-	virtual bool annoy(int amount);
+	virtual bool annoy(int amt);
 	bool correctDirection(GraphObject::Direction&);
+	int atIntersection(GraphObject::Direction &);
 	virtual void doSomething();
 	virtual void addGold();
+	void findRandomDirection(int & randomDirection);
+	int calculateNumSquaresToMoveInCurrentDirection (int min, int max) { return rand() % (max - min + 1) + min; };
 protected:
-	int calculatedTicksToWait = std::max(0, 3 - getLevel() / 4), currentTicksToWait = calculatedTicksToWait, shoutTimer = 15;
+	const int calculatedTicksToWait = std::max(0, 3 - getLevel() / 4);
+	int	currentTicksToWait = calculatedTicksToWait, 
+		shoutTimer = 15,
+		numSquaresToMoveInCurrentDirection = 0,
+		perpendicularTickCounter = 200;
 
 private:
 };
