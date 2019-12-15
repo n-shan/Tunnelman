@@ -1,5 +1,6 @@
 #include "Actor.h"
 #include "StudentWorld.h"
+#include <queue>
 
 //actor funtions
 int Actor::getLevel() {
@@ -111,8 +112,8 @@ void Tunnelman::doSomething() {
 		case KEY_PRESS_TAB:
 			if (getGold() > 0) {
 				addGold(-1);
-				(*getWorld())->getActors().push_back(std::move(std::make_unique<GoldNugget>
-					(std::make_shared<StudentWorld*>(*getWorld()), getX(), getY(), true, true, false)));
+				(*getWorld())->getActors().push_back(std::make_unique<GoldNugget>
+                                                     (std::make_shared<StudentWorld*>(*getWorld()), getX(), getY(), true, true, false));
 			}
 			break;
 		case KEY_PRESS_ESCAPE:
@@ -162,7 +163,6 @@ void Squirt::doSomething() {
 		}
 		//if the squirt cannot move
 		else {
-			setVisible(false);
 			setDead();
 			return;
 		}
@@ -170,7 +170,6 @@ void Squirt::doSomething() {
 	}
 	//if the squirt has traveled the max distance
 	else {
-		setVisible(false);
 		setDead();
 	}
 }
@@ -319,3 +318,353 @@ void SonarKit::doSomething() {
         tOnField--;
     }
 }
+
+//Regular Protester functions
+//void RegularProtester::doSomething()
+//{
+//	if (isAlive())
+//	{
+//		if (currentTicksToWait == 0) //when the ticks to wait is 0
+//		{
+//			Direction dir = getDirection();
+//			if ((*getWorld())->withinRadius(getX(), getY(),
+//				(*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), 4, 4, none)
+//				&& correctDirection(dir)
+//				&& shoutTimer == 0)
+//			{
+//				(*getWorld())->playSound(SOUND_PROTESTER_YELL);
+//				(*getWorld())->getTunnelMan()->annoy(-2);
+//				shoutTimer = 15;
+//			}
+//			else
+//			{
+//				//check if protester can phase through wall
+//				dir = none;
+//				if ((*getWorld())->withinRadius(getX(), getY(),
+//					(*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), 4, 4, none)
+//					&& correctDirection(dir))
+//				{
+//					setDirection(dir);
+//
+//				}
+//
+//
+//			}
+//			//chooseNextPath();
+//			//last line should be
+//			currentTicksToWait = calculatedTicksToWait; //reset ticks to wait for
+//		}
+//		currentTicksToWait--;
+//		if (shoutTimer)
+//			shoutTimer--;
+//	}
+//	else
+//	{
+//		//		path = getPath(getX(), getY(), 60, 60);
+//		//		if (!path.empty())
+//		//			followPath(path);
+//		//		else //means that there is no more path follow because they are at the destination
+//		setDead();
+//		//			(*getWorld())->increaseScore(100);
+//	}
+//}
+
+//USE THIS DO SOMETHING
+void RegularProtester::doSomething() {
+    if(isAlive()) {
+        if (currentTicksToWait == 0) {
+            
+        }
+        else {
+            currentTicksToWait--;
+            //        if (shoutTimer)
+            //            shoutTimer--;
+        }
+        //needs to leave
+        //#3
+        if(getHitPoints() == 0) {
+            if(getX() == 60 && getY() == 60) {
+                setDead();
+            }
+            else {
+                updateGrid();
+                //move one step closer to exit
+                //IMPLEMENT FINDDIRECTIONOUT FUNCTION
+                setDirection(findDirectionOut());
+                if(getDirection() == right)
+                    moveTo(getX() + 1, getY());
+        
+                if(getDirection() == left)
+                    moveTo(getX() - 1, getY());
+
+                if(getDirection() == up)
+                    moveTo(getX(), getY() + 1);
+
+                if(getDirection() == down)
+                    moveTo(getX(), getY() - 1);
+
+                return;
+            }
+        }
+            
+    }
+    
+}
+
+void Protester::updateGrid() {
+    for(int i = 0; i < 60; i++) {
+        for(int j = 0; j < 60; j++) {
+            if((*getWorld())->canCreateAt(i, j)) {
+                canMoveGrid[i][j] = true;
+            }
+            else
+                canMoveGrid[i][j] = false;
+        }
+    }
+}
+
+//IMPLEMENT THIS
+Actor::Direction Protester::findDirectionOut() {
+    //std::queue<>
+    return right;
+}
+
+//Hardcore Protester functions
+void HardCoreProtester::doSomething()
+{
+	if (getHitPoints() != 0)
+	{
+		if (currentTicksToWait == 0) //when the ticks to wait is 0
+		{
+			if ((*getWorld())->withinRadius(getX(), getY(),
+				(*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), 4, 4, none))
+			{
+				//each tick make a thread to compare the path. 
+				//If there is a new, better path, join the thread by returning the 
+				//promise to a future and set path = future;
+//				path = getPath(getX(), getY(),
+//					(*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY());
+//				followPath(path);
+			}
+			else
+			{
+				//chooseNextPath();
+			}
+			//last line should be
+			currentTicksToWait = calculatedTicksToWait; //reset ticks to wait for
+		}
+		currentTicksToWait--;
+	}
+	else
+	{
+//		path = getPath(getX(), getY(), 60, 60);
+//		if (!path.empty())
+//			followPath(path);
+        
+		//else //means that there is no more path follow because they are at the destination
+			setDead();
+	}
+}
+//Protester functions
+//std::vector<std::pair<GraphObject::Direction, std::pair<int, int>>>
+//Protester::getPath(int x, int y, int destinationX, int destinationY)
+//{
+//	std::vector<std::pair<GraphObject::Direction, std::pair<int, int>>> p;
+//	if (x == destinationX && y == destinationY)
+//		p.clear(); return p;
+//
+//}
+bool Protester::correctDirection(GraphObject::Direction& d)
+{
+	//check if Tman is in the direction protester is facing
+	//check if there is any earth or boulders in the way
+	if (d == left)
+	{
+		if ((*getWorld())->getTunnelMan()->getX() < getX()
+			&& (*getWorld())->getTunnelMan()->getY() >= getY() //TODO: SEE IF IT SHOULD BE == OR >=
+			&& (*getWorld())->getTunnelMan()->getY() < getY() + 4)
+		{
+			for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++)
+			{
+				if ((*it)->getID() == TID_BOULDER)
+				{
+					if ((*it)->getX() < getX()
+						&& (*it)->getY() >= getY()
+						&& (*it)->getY() < getY() + 4
+						)
+					{
+						return false;
+					}
+				}
+			}
+			int x = getX();
+			bool noEarth = true;
+			while (noEarth)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					noEarth = !(*getWorld())->getEarthGridPoint(x + i, getY())->isVisible();
+					if (x == 0)
+						noEarth = false;
+					if (!noEarth)
+						break;
+				}
+				x--;
+			}
+			x++;
+			if (x <= (*getWorld())->getTunnelMan()->getX())
+				return false;
+			else
+				return true;
+		}
+	}
+	if (d == right)
+	{
+		if ((*getWorld())->getTunnelMan()->getX() > getX()
+			&& (*getWorld())->getTunnelMan()->getY() >= getY()
+			&& (*getWorld())->getTunnelMan()->getY() < getY() + 4)
+		{
+			for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++)
+			{
+				if ((*it)->getID() == TID_BOULDER)
+				{
+					if ((*it)->getX() > getX()
+						&& (*it)->getY() >= getY()
+						&& (*it)->getY() < getY() + 4)
+					{
+						return false;
+					}
+				}
+			}
+			int x = getX();
+			bool noEarth = true;
+			while (noEarth)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					noEarth = !(*getWorld())->getEarthGridPoint(x + i, getY())->isVisible();
+					if (x == 60)
+						noEarth = false;
+					if (!noEarth)
+						break;
+				}
+				x++;
+			}
+			x--;
+			if (x > (*getWorld())->getTunnelMan()->getX())
+				return false;
+			else
+				return true;
+		}
+	}
+	if (d == down)
+	{
+		if ((*getWorld())->getTunnelMan()->getX() >= getX()
+			&& (*getWorld())->getTunnelMan()->getX() < getX() + 4
+			&& (*getWorld())->getTunnelMan()->getY() < getY())
+		{
+			for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++)
+			{
+				if ((*it)->getID() == TID_BOULDER)
+				{
+					if ((*it)->getX() >= getX()
+						&& (*it)->getX() < getX() + 4
+						&& (*it)->getY() < getY())
+					{
+						return false;
+					}
+				}
+			}
+			int y = getY();
+			bool noEarth = true;
+			while (noEarth)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					noEarth = !(*getWorld())->getEarthGridPoint(getX(), y + i)->isVisible();
+					if (y == 0)
+						noEarth = false;
+					if (!noEarth)
+						break;
+				}
+				y--;
+			}
+			y++;
+			if (y >= (*getWorld())->getTunnelMan()->getY())
+				return false;
+			else
+				return true;
+		}
+	}
+	if (d == up)
+	{
+		if ((*getWorld())->getTunnelMan()->getX() >= getX()
+			&& (*getWorld())->getTunnelMan()->getX() > getX() + 4
+			&& (*getWorld())->getTunnelMan()->getY() < getY())
+		{
+			for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++)
+			{
+				if ((*it)->getID() == TID_BOULDER)
+				{
+					if ((*it)->getX() >= getX()
+						&& (*it)->getX() < getX() + 4
+						&& (*it)->getY() < getY())
+					{
+						return false;
+					}
+				}
+			}
+			int y = getY();
+			bool noEarth = true;
+			while (noEarth)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					noEarth = !(*getWorld())->getEarthGridPoint(getX(), y + i)->isVisible();
+					if (y == 60)
+						noEarth = false;
+					if (!noEarth)
+						break;
+				}
+				y++;
+			}
+			y--;
+			if (y > (*getWorld())->getTunnelMan()->getY())
+				return false;
+			else
+				return true;
+		}
+	}
+	if (d == none)
+	{
+		Direction d1 = left;
+		Direction d2 = right;
+		Direction d3 = up;
+		Direction d4 = down;
+
+		//check all directions within 4 squares
+		//then change d to be the direction where tman is
+		if (correctDirection(d1))
+			d = d1;
+		if (correctDirection(d2))
+			d = d2;
+		if (correctDirection(d3))
+			d = d3;
+		if (correctDirection(d4))
+			d = d4;
+	}
+	return false;
+}
+
+bool Protester::annoy(int amount) {
+    return false;
+}
+
+void RegularProtester::addGold() {
+    
+}
+
+void HardCoreProtester::addGold() {
+    
+}
+

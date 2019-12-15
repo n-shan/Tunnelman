@@ -133,8 +133,17 @@ public:
 
 	virtual bool annoy(int amount);
 
-	virtual void doSomething();
-	virtual void addGold();
+	bool correctDirection(GraphObject::Direction&);
+    
+    //updates canMoveGrid
+    void updateGrid();
+    //finds direction to get out of grid
+    Direction findDirectionOut();
+    
+protected:
+	int calculatedTicksToWait = std::max(0, 3 - getLevel() / 4), currentTicksToWait = calculatedTicksToWait, shoutTimer = 15;
+    bool canMoveGrid[60][60];
+
 private:
 
 };
@@ -241,4 +250,3 @@ private:
 };
 
 #endif // ACTOR_H_
-
