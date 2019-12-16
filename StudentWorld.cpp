@@ -14,11 +14,13 @@ int StudentWorld::init() {
 	//setGameStatText(getStatText());
 	//display earth grid
 	for (int i = 0; i < 60; i++) {
-		for (int j = 0; j < 60; j++) {
+		for (int j = 0; j < 64; j++) {
 			//create initial tunnel
 			earthGrid[i][j] = make_unique<Earth>(i, j, false);
 			if (i < 30 || i > 33 || j < 4)
 				earthGrid[i][j] = make_unique<Earth>(i, j, true);
+			if (j >= 60)
+				earthGrid[i][j] = make_unique<Earth>(i, j, false);
 		}
 	}
 	//display ActivatingObjects
@@ -39,7 +41,14 @@ int StudentWorld::move() {
 	// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
 	//display Game Stats
 	setGameStatText(getStatText());
-
+//	if(!currentProtesterRespawnTimer)
+//	{
+//		std::unique_ptr<RegularProtester> protester = std::make_unique<RegularProtester>
+//			(std::make_shared<StudentWorld*>(this), 56, 60);
+//		actors.push_back(std::move(protester));
+////		currentProtesterRespawnTimer = ProtesterRespawnTimer;
+//		currentProtesterRespawnTimer = 1;
+//	}
 	int G = getLevel() * 25 + 300;
 	int num = rand() % G + 1;
 	//if 1/G, add sonar or water
@@ -69,6 +78,7 @@ int StudentWorld::move() {
 	tunnelMan->doSomething();
 	dig();
 	removeDeadActors(actors);
+	//currentProtesterRespawnTimer--;
 	if (!tunnelMan->isAlive())
 		return GWSTATUS_PLAYER_DIED;
 	if (getBarrels() == 0)
@@ -80,10 +90,13 @@ void StudentWorld::cleanUp() {
 	for (auto it = actors.begin(); it != actors.end();) {
 		it = actors.erase(it);
 	}
+//	tunnelMan.release();
+//	delete[] earthGrid;
 	if (!tunnelMan->isAlive())
 		decLives();
 	if (getBarrels() == 0)
 	{
+		advanceToNextLevel();
 		//Increases level in gameController 
 	}
 }
@@ -248,15 +261,22 @@ void StudentWorld::clearEarth(int constLevel, int botOfLevel, int yLevel, bool i
 		clearAmount = 60 - tunnelMan->getY();
 	}
 	//clear the earth
-	playSound(SOUND_DIG);
 	for (int i = botOfLevel; i < botOfLevel + clearAmount; i++) {
 		if (isHoriz) {
 			if (earthGrid[constLevel][i]->isVisible())
+			{
+				if(i == botOfLevel)
+					playSound(SOUND_DIG);
 				earthGrid[constLevel][i]->setVisible(false);
+			}
 		}
 		else {
 			if (earthGrid[i][constLevel]->isVisible())
+			{
+				if (i == botOfLevel)
+					playSound(SOUND_DIG);
 				earthGrid[i][constLevel]->setVisible(false);
+			}
 		}
 	}
 }

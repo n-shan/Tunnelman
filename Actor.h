@@ -4,21 +4,26 @@
 #include "GraphObject.h"
 #include <algorithm>
 
-class StudentWorld;
+//forward declaration to be able to create the getWorld() function
+//Which lets us access StudentWorld and GameWorld functions within the Actor header and cpp files
+class StudentWorld; 
 
-// Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
+//The most base class of all other game objects
+//It passes in required data to the GraphObject so the game is displayed properly
 class Actor : public GraphObject {
 public:
 	Actor(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, Direction dir, double size, int depth)
 		: GraphObject(imageID, startX, startY, dir, size, depth) {
 		setVisible(false);
-		is_Alive = true;
+		is_Alive = true; //used to track and clean any objects no longer being used
 		s_World = studentWorld;
 	}
 
 	virtual ~Actor() { }
 
-	virtual void doSomething() = 0;
+	//pure virtual because almost all actors must do something but they greatly vary in functionality
+	virtual void doSomething() = 0; 
+
 
 	bool isAlive() const { return is_Alive; }
 	void setDead() { is_Alive = false; }
@@ -33,6 +38,7 @@ private:
 	bool is_Alive;
 };
 
+//Simplest actor, all it does is get set to visible or not depending on other actors interaction with it
 class Earth : public Actor {
 public:
 	Earth(int x, int y, bool isVisible) : Actor(nullptr, TID_EARTH, x, y, right, .25, 3) {
@@ -46,6 +52,7 @@ private:
 
 };
 
+//Blocks Agents (see below) from traversing through boulders, can fall, and fall on Agents, effectively killing them
 class Boulder : public Actor
 {
 public:
@@ -57,12 +64,13 @@ public:
 	}
 	virtual ~Boulder() {}
 	virtual void doSomething();
-	bool shouldBoulderFall(int, int);
+	bool shouldBoulderFall(int, int); //checks every tick if the boulder should keep falling
 private:
-	bool stable;
-	int waiting;
+	bool stable; //used to denote if it should fall or not
+	int waiting; //timer between the switch between stable and not stable
 };
 
+//Keypress(spacebar) created object, hurts and possibly kills protesters
 class Squirt : public Actor {
 public:
 	Squirt(std::shared_ptr<StudentWorld*> studentWorld, int x, int y, Direction dir) : Actor(studentWorld, TID_WATER_SPURT, x, y, dir, 1.0, 1) { disTraveled = 0; }
@@ -71,9 +79,10 @@ public:
 
 	virtual void doSomething();
 private:
-	int disTraveled;
+	int disTraveled; //timer/check to see when squirt should stop traveling
 };
 
+//A base class of TunnelMan, and Protester, specifying health points, and Agent specific functions
 class Agent : public Actor {
 public:
 	Agent(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, Direction dir, int HP)
@@ -85,7 +94,7 @@ public:
 
 	virtual bool annoy(int amt); //TODO
 	// Pick up a gold nugget
-	virtual void addGold(int amt) = 0;
+	virtual void addGold(int amt) {}
 
 	int getHitPoints() const { return hitPoints; }
 
@@ -94,6 +103,8 @@ private:
 	int hitPoints;
 };
 
+//Player's character, all the get and add functions are to track stats of player 
+//and possible actions the player can do based upon those stats 
 class Tunnelman : public Agent {
 public:
 	Tunnelman(std::shared_ptr<StudentWorld*> studentWorld)
@@ -121,15 +132,16 @@ public:
 
 private:
 	int gold = 0, sonar = 1, water = 5;
-	//ADD HERE
 };
 
+//Many functions to make the doSomething function easier to read logic-wise.
 class Protester : public Agent {
 public:
 	Protester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY, int HP)
-		: Agent(studentWorld, imageID, startX, startY, left, HP) { }
+		: Agent(studentWorld, imageID, startX, startY, right, HP) { }
 
 	virtual ~Protester() { }
+<<<<<<< Updated upstream
 
 	virtual bool annoy(int amount);
 
@@ -137,30 +149,63 @@ public:
 	virtual void addGold();
 private:
 
+=======
+	//plays hurt or death sounds, resets numSquaresToMoveInCurrentDirection different depending on hurt or dead
+	virtual bool annoy(int amt); 
+	//Checks if the Protester is: 1) facing tunnelman down a hallway 2) checking there is no earth or no boulders between them.
+	//Inputting the none direction checks all directions and returns the correct one by reference
+	bool correctDirection(GraphObject::Direction&);
+	//Checks if there is another possible way to turn, returns how many intersections there are and the type of direction it is
+	int atIntersection(GraphObject::Direction &);
+	
+	void changeToRandomDirection(int & randomDirection);
+
+	void tryToMove();
+
+	virtual void addGold();
+	virtual void doSomething() {}
+	void findRandomDirection(int & randomDirection);
+	int calculateNumSquaresToMoveInCurrentDirection (int min, int max) { return rand() % (max - min + 1) + min; };
+    //updates canMoveGrid
+    void updateGrid();
+    //finds direction to get out of grid
+    Direction findDirectionOut();
+protected:
+	const int calculatedTicksToWait = std::max(0, ((3 - getLevel()) / 4));
+	int	currentTicksToWait = calculatedTicksToWait, 
+		shoutTimer = 15,
+		numSquaresToMoveInCurrentDirection = 0,
+		perpendicularTickCounter = 200;
+    bool canMoveGrid[60][60];
+>>>>>>> Stashed changes
 };
 
 class RegularProtester : public Protester {
 public:
-	RegularProtester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY)
-		: Protester(studentWorld, imageID, startX, startY, 5) { }
+	RegularProtester(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
+		: Protester(studentWorld, TID_PROTESTER, startX, startY, 5) {
+		setVisible(true);
+	}
 
 	virtual ~RegularProtester() { }
 
 	virtual void doSomething();
-	virtual void addGold();
+	virtual void addGold() { Protester::addGold(); }
 private:
 
 };
 
 class HardCoreProtester : public Protester {
 public:
-	HardCoreProtester(std::shared_ptr<StudentWorld*> studentWorld, int imageID, int startX, int startY)
-		: Protester(studentWorld, imageID, startX, startY, 20) { }
+	HardCoreProtester(std::shared_ptr<StudentWorld*> studentWorld, int startX, int startY)
+		: Protester(studentWorld, TID_HARD_CORE_PROTESTER, startX, startY, 20) {
+		setVisible(true);
+	}
 
 	virtual ~HardCoreProtester() { }
 
 	virtual void doSomething();
-	virtual void addGold();
+	virtual void addGold() { Protester::addGold(); }
 private:
 
 };
