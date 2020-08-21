@@ -20,7 +20,7 @@ int StudentWorld::init() {
 			if (i < 30 || i > 33 || j < 4)
 				earthGrid[i][j] = make_unique<Earth>(i, j, true);
 			if (j >= 60)
-				earthGrid[i][j] = make_unique<Earth>(i, j, false);
+				earthGrid[i][j] = smake_unique<Earth>(i, j, false);
 		}
 	}
 	//display ActivatingObjects

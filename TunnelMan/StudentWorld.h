@@ -89,14 +89,9 @@ public:
 	void createActivatingObject(ActivatedObject);
 
 private:
-<<<<<<< Updated upstream
-	std::unique_ptr<Earth> earthGrid[60][60];
-    
-=======
 	std::unique_ptr<Earth> earthGrid[60][64];
 
->>>>>>> Stashed changes
-	//CREATE AN NEW GRID CALLED ISDUG WHICH 
+	//CREATE AN NEW GRID CALLED ISDUG WHICH
 	//IS A UNIQUE_PTR 2D ARRAY OF BOOLS WHERE
 	//EACH EARTH THAT IS ALREADY DUG IS TRUE IN THE 2D ARRAY
     
@@ -106,21 +101,10 @@ private:
 	std::vector<std::unique_ptr<Actor>> actors;
     
 	int currentLevel;
-<<<<<<< Updated upstream
-    
-=======
 	int ProtesterRespawnTimer = std::max(25, 200 - currentLevel);
 	int currentProtesterRespawnTimer = 0;
 	int maxNumberOfProtesters = std::min(15, (int)(2 + currentLevel * 1.5));
->>>>>>> Stashed changes
 	int barrels;
 };
 
 #endif // STUDENTWORLD_H_
-
-//Have a stalePointScore that resets the score to score at the start of the level
-//if the player dies on that level?
-
-//Make it so gold cannot be dropped on another gold
-//Make it so dropped gold cannot give points to player
-

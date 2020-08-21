@@ -119,20 +119,14 @@ void Tunnelman::doSomething() {
 					}
 				}
 				addGold(-1);
-<<<<<<< Updated upstream
 				(*getWorld())->getActors().push_back(std::move(std::make_unique<GoldNugget>
 					(std::make_shared<StudentWorld*>(*getWorld()), getX(), getY(), true, true, false)));
-=======
-				(*getWorld())->getActors().push_back(
-					std::make_unique<GoldNugget>(std::make_shared<StudentWorld*>(*getWorld()), getX(), getY(), true, true, false));
->>>>>>> Stashed changes
 			}
 			break;
 		case KEY_PRESS_ESCAPE:
 			setDead();
 			break;
-<<<<<<< Updated upstream
-                
+
         case 'z':
         case 'Z':
                 if(getSonar() > 0) {
@@ -147,33 +141,11 @@ void Tunnelman::doSomething() {
                     }
                 }
         }
-        
-
-=======
-
-		case 'z':
-		case 'Z':
-			if (getSonar() > 0) {
-				addSonar(-1);
-				(*getWorld())->playSound(SOUND_SONAR);
-				//expose all hidden game objects within 12 from tunnelman
-				for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++) {
-					if ((*getWorld())->withinRadius(getX(), getY(), (*it)->getX(), (*it)->getY(), 12, 4, getDirection())) {
-						(*it)->setVisible(true);
-					}
-
-				}
-			}
-			break;
-		}
->>>>>>> Stashed changes
 	}
 }
 
 //TODO
 bool Tunnelman::annoy(int amt) {
-<<<<<<< Updated upstream
-=======
 	if (hitPoints > 0)
 	{
 		hitPoints += amt;
@@ -182,7 +154,6 @@ bool Tunnelman::annoy(int amt) {
 		else
 			(*getWorld())->playSound(SOUND_PLAYER_GIVE_UP);
 	}
->>>>>>> Stashed changes
 	return false;
 }
 
@@ -263,25 +234,14 @@ void Boulder::doSomething() {
 					{
 						if ((*i)->getID() == TID_PROTESTER || (*i)->getID() == TID_HARD_CORE_PROTESTER) {
 							if ((*getWorld())->withinRadius(getX(), getY(), (*i)->getX(), (*i)->getY(), 3, 4, down)) {
-<<<<<<< Updated upstream
-								std::cout << "protester hit" << std::endl;
-								// kill protester
-=======
 								(*i)->annoy(-100);
 								(*getWorld())->increaseScore(500);
->>>>>>> Stashed changes
 							}
 						}
 					}
 					//check if player is going to be hit
 					if ((*getWorld())->withinRadius(getX(), getY(), (*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(), 3, 4, down)) {
-<<<<<<< Updated upstream
-						//kill player
-						std::cout << "Tman hit" << std::endl;
-=======
 						(*getWorld())->getTunnelMan()->annoy(-100);
-
->>>>>>> Stashed changes
 					}
 					moveTo(getX(), getY() - 1);
 				}
@@ -356,20 +316,6 @@ void GoldNugget::doSomething() {
 
 //SonarKit functions
 void SonarKit::doSomething() {
-<<<<<<< Updated upstream
-    if(isAlive()) {
-        if (tOnField == 0) {
-            setDead();
-            return;
-        }
-        //check if tunnelman is within 3 of the sonar kit
-        if ((*getWorld())->withinRadius((*getWorld())->getTunnelMan()->getX(), (*getWorld())->getTunnelMan()->getY(),
-        getX(), getY(), 3, 4, (*getWorld())->getTunnelMan()->getDirection())) {
-            setDead();
-            (*getWorld())->playSound(SOUND_GOT_GOODIE);
-            (*getWorld())->getTunnelMan()->addSonar(1);
-            (*getWorld())->increaseScore(75);
-=======
 	if (isAlive()) {
 		if (tOnField == 0) {
 			setDead();
@@ -425,7 +371,6 @@ void RegularProtester::doSomething()
 					if (dir == up)
 						shiftX = 0; shiftY = 1;
 					moveTo(getX() + shiftX, getY() + shiftY);
-//TODO: see if we need next 2 lines
 					numSquaresToMoveInCurrentDirection = 0;
 					currentTicksToWait = calculatedTicksToWait; //reset ticks to wait for
 					return;
@@ -515,12 +460,6 @@ void RegularProtester::doSomething()
 
 			return;
 		}
-		//		path = getPath(getX(), getY(), 60, 60);
-		//		if (!path.empty())
-		//			followPath(path);
-		//		else //means that there is no more path follow because they are at the destination
-		//setDead();
-		//			(*getWorld())->increaseScore(100);
 	}
 }
 void Protester::updateGrid() {
@@ -531,13 +470,11 @@ void Protester::updateGrid() {
             }
             else
                 canMoveGrid[i][j] = false;
->>>>>>> Stashed changes
         }
         tOnField--;
     }
 }
-<<<<<<< Updated upstream
-=======
+
 void Protester::tryToMove()
 {
 	int randomDirection = rand() % 4;
@@ -716,18 +653,8 @@ Actor::Direction Protester::findDirectionOut() {
 }
 
 //Hardcore Protester functions
-void HardCoreProtester::doSomething()
-{
-}
-//Protester functions
-//std::vector<std::pair<GraphObject::Direction, std::pair<int, int>>>
-//Protester::getPath(int x, int y, int destinationX, int destinationY)
-//{
-//	std::vector<std::pair<GraphObject::Direction, std::pair<int, int>>> p;
-//	if (x == destinationX && y == destinationY)
-//		p.clear(); return p;
-//
-//}
+void HardCoreProtester::doSomething() {}
+
 bool Protester::annoy(int amt) {
 	if (!(getHitPoints() <= 0))
 	{
@@ -822,15 +749,12 @@ int Protester::atIntersection(Direction& d)
 }
 void Protester::findRandomDirection(int& randomDirection)
 {
-	//	int sentinelRecursionCheck = 0; //should not be greater than 4 //meaning it checked all directions and they are all bad
 	if (getY() == 60)
 	{
 		Direction d = getDirection();
 		int intersection = atIntersection(d);
 		if (intersection == 1)
 		{
-//			if(d == up)
-//			randomDirection = 2;
 			if(d == down)
 			randomDirection = 3;
 		}
@@ -938,19 +862,6 @@ bool Protester::correctDirection(GraphObject::Direction& d)
 		if ((*getWorld())->getTunnelMan()->getX() < getX()
 			&& (*getWorld())->getTunnelMan()->getY() == getY())
 		{
-			//for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++)
-			//{
-			//	if ((*it)->getID() == TID_BOULDER)
-			//	{
-			//		if (((*it)->getY() >= getY() || (*it)->getY() < getY() + 4)
-			//			&& (*getWorld())->getTunnelMan()->getX() < (*it)->getX() < getX()
-			//			&& ((*getWorld())->getTunnelMan()->getY() >= (*it)->getY()
-			//				|| (*getWorld())->getTunnelMan()->getY() < (*it)->getY() + 4))
-			//		{
-			//			return false;
-			//		}
-			//	}
-			//}
 			int x = getX();
 			bool noEarth = true;
 			while (noEarth)
@@ -977,19 +888,6 @@ bool Protester::correctDirection(GraphObject::Direction& d)
 		if ((*getWorld())->getTunnelMan()->getX() > getX()
 			&& (*getWorld())->getTunnelMan()->getY() == getY())
 		{
-			//for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++)
-			//{
-			//	if ((*it)->getID() == TID_BOULDER)
-			//	{
-			//		if (((*it)->getY() >= getY() || (*it)->getY() < getY() + 4)
-			//			&& (*getWorld())->getTunnelMan()->getX() > (*it)->getX() > getX()
-			//			&& ((*getWorld())->getTunnelMan()->getY() >= (*it)->getY()
-			//				|| (*getWorld())->getTunnelMan()->getY() < (*it)->getY() + 4))
-			//		{
-			//			return false;
-			//		}
-			//	}
-			//}
 			int x = getX();
 			bool noEarth = true;
 			while (noEarth)
@@ -1016,19 +914,6 @@ bool Protester::correctDirection(GraphObject::Direction& d)
 		if ((*getWorld())->getTunnelMan()->getY() < getY()
 			&& (*getWorld())->getTunnelMan()->getX() == getX())
 		{
-			//for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++)
-			//{
-			//	if ((*it)->getID() == TID_BOULDER)
-			//	{
-			//		if (((*it)->getX() >= getX() || (*it)->getX() < getX() + 4)
-			//			&& (*getWorld())->getTunnelMan()->getY() < (*it)->getY() < getY()
-			//			&& ((*getWorld())->getTunnelMan()->getX() >= (*it)->getX()
-			//				|| (*getWorld())->getTunnelMan()->getX() < (*it)->getX() + 4))
-			//		{
-			//			return false;
-			//		}
-			//	}
-			//}
 			int y = getY();
 			bool noEarth = true;
 			while (noEarth)
@@ -1055,19 +940,6 @@ bool Protester::correctDirection(GraphObject::Direction& d)
 		if ((*getWorld())->getTunnelMan()->getY() > getY()
 			&& (*getWorld())->getTunnelMan()->getX() == getX())
 		{
-			//for (auto it = (*getWorld())->getActors().begin(); it != (*getWorld())->getActors().end(); it++)
-			//{
-			//	if ((*it)->getID() == TID_BOULDER)
-			//	{
-			//		if (((*it)->getX() >= getX() || (*it)->getX() < getX() + 4)
-			//			&& (*getWorld())->getTunnelMan()->getY() > (*it)->getY() > getY()
-			//			&& ((*getWorld())->getTunnelMan()->getX() >= (*it)->getX()
-			//				|| (*getWorld())->getTunnelMan()->getX() < (*it)->getX() + 4))
-			//		{
-			//			return false;
-			//		}
-			//	}
-			//}
 			int y = getY();
 			bool noEarth = true;
 			while (noEarth)
@@ -1109,4 +981,3 @@ bool Protester::correctDirection(GraphObject::Direction& d)
 	}
 	return false;
 }
->>>>>>> Stashed changes

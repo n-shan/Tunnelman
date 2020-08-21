@@ -141,15 +141,7 @@ public:
 		: Agent(studentWorld, imageID, startX, startY, right, HP) { }
 
 	virtual ~Protester() { }
-<<<<<<< Updated upstream
 
-	virtual bool annoy(int amount);
-
-	virtual void doSomething();
-	virtual void addGold();
-private:
-
-=======
 	//plays hurt or death sounds, resets numSquaresToMoveInCurrentDirection different depending on hurt or dead
 	virtual bool annoy(int amt); 
 	//Checks if the Protester is: 1) facing tunnelman down a hallway 2) checking there is no earth or no boulders between them.
@@ -177,7 +169,6 @@ protected:
 		numSquaresToMoveInCurrentDirection = 0,
 		perpendicularTickCounter = 200;
     bool canMoveGrid[60][60];
->>>>>>> Stashed changes
 };
 
 class RegularProtester : public Protester {
